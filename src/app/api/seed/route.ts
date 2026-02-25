@@ -216,6 +216,7 @@ export async function POST() {
     return NextResponse.json({ success: true, message: 'Database seeded successfully' });
   } catch (error) {
     console.error('Seed error:', error);
-    return NextResponse.json({ success: false, error: 'Seed failed' }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ success: false, error: `Seed failed: ${message}` }, { status: 500 });
   }
 }
