@@ -2,7 +2,6 @@
 
 import { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { adminFetch, adminUpload } from '@/lib/admin-auth';
 import toast from 'react-hot-toast';
 import { FiPlus, FiTrash2, FiUpload } from 'react-icons/fi';
@@ -46,6 +45,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
     Promise.all([
@@ -118,6 +118,18 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
   const removeImage = (idx: number) => {
     setForm({ ...form, images: form.images.filter((_, i) => i !== idx) });
+  };
+
+  const addImageByUrl = () => {
+    const url = imageUrl.trim();
+    if (!url) return;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      toast.error('Please enter a valid URL starting with http:// or https://');
+      return;
+    }
+    setForm({ ...form, images: [...form.images, url] });
+    setImageUrl('');
+    toast.success('Image URL added');
   };
 
   const addSpec = () => {
@@ -203,7 +215,8 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
               <div className="flex flex-wrap gap-3 mb-3">
                 {form.images.map((img, idx) => (
                   <div key={idx} className="relative w-24 h-24 rounded-lg overflow-hidden bg-slate-100 group">
-                    <Image src={img} alt="" fill className="object-cover" sizes="96px" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={img} alt="" className="object-cover w-full h-full" />
                     <button type="button" onClick={() => removeImage(idx)} className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                       <FiTrash2 size={12} />
                     </button>
@@ -215,6 +228,11 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                   <input type="file" multiple accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploading} />
                 </label>
               </div>
+              <div className="flex gap-2">
+                <input type="text" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addImageByUrl(); } }} className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="Or paste image URL (https://...)" />
+                <button type="button" onClick={addImageByUrl} className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium rounded-lg transition-colors"><FiPlus size={16} className="inline" /> Add URL</button>
+              </div>
+              <p className="text-xs text-slate-400 mt-1">Upload files (max 2MB each) or paste image URLs from the web</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Video URL</label>

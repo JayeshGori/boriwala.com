@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { FaWhatsapp } from 'react-icons/fa';
 import { IProduct } from '@/types';
 import { formatPrice, getWhatsAppLink } from '@/lib/utils';
@@ -21,12 +20,11 @@ export default function ProductCard({ product }: ProductCardProps) {
       <Link href={`/products/${product.slug}`} className="block">
         <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
           {product.images && product.images.length > 0 ? (
-            <Image
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
               src={product.images[0]}
               alt={product.name}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-slate-400">

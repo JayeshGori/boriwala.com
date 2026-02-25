@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, use } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { FaWhatsapp } from 'react-icons/fa';
 import { FiChevronRight, FiCheck, FiX, FiClock } from 'react-icons/fi';
@@ -109,13 +108,11 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
           <div>
             <div className="relative aspect-square bg-slate-100 rounded-xl overflow-hidden mb-4">
               {product.images && product.images.length > 0 ? (
-                <Image
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
                   src={product.images[activeImage]}
                   alt={product.name}
-                  fill
-                  className="object-contain"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  priority
+                  className="absolute inset-0 w-full h-full object-contain"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-slate-400">
@@ -136,7 +133,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                     onClick={() => setActiveImage(idx)}
                     className={`relative w-20 h-20 shrink-0 rounded-lg overflow-hidden border-2 transition-all ${idx === activeImage ? 'border-amber-500' : 'border-slate-200 hover:border-slate-300'}`}
                   >
-                    <Image src={img} alt="" fill className="object-cover" sizes="80px" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
