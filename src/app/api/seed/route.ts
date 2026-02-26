@@ -15,6 +15,7 @@ const sampleCategories = [
   { name: 'HDPE Bags', slug: 'hdpe-bags', description: 'High-density polyethylene bags', order: 6, icon: '🛍️' },
   { name: 'Cement Bags', slug: 'cement-bags', description: 'Heavy-duty cement packaging bags', order: 7, icon: '🏗️' },
   { name: 'Food Grain Bags', slug: 'food-grain-bags', description: 'Food-grade storage bags', order: 8, icon: '🌾' },
+  { name: 'Plastic Granules', slug: 'plastic-granules', description: 'Recycled and virgin plastic granules for manufacturing', order: 9, icon: '🔄' },
 ];
 
 export async function POST() {
