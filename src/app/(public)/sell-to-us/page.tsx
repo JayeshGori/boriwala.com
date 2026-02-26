@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import { FiCheckCircle, FiUpload, FiLink, FiPlus, FiX, FiPhone, FiArrowRight, FiPackage, FiTruck, FiDollarSign, FiShield } from 'react-icons/fi';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 
 const MATERIAL_TYPES = [
   { value: 'jute_bags', label: 'Jute Bags', emoji: '🧶' },
@@ -115,9 +113,7 @@ export default function SellToUsPage() {
 
   if (submitted) {
     return (
-      <>
-        <Header />
-        <main className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center px-4">
           <div className="max-w-md w-full text-center py-20">
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <FiCheckCircle size={40} className="text-green-600" />
@@ -132,16 +128,12 @@ export default function SellToUsPage() {
               Back to Home
             </a>
           </div>
-        </main>
-        <Footer />
-      </>
+      </div>
     );
   }
 
   return (
     <>
-      <Header />
-      <main>
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-br from-green-700 via-green-800 to-slate-900 text-white">
           <div className="absolute inset-0 opacity-10">
@@ -513,8 +505,6 @@ export default function SellToUsPage() {
             </form>
           </div>
         </section>
-      </main>
-      <Footer />
     </>
   );
 }
