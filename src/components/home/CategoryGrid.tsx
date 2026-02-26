@@ -9,6 +9,8 @@ const categories = [
   { name: 'HDPE Bags', slug: 'hdpe-bags', icon: '🛍️', desc: 'High-density PE bags' },
   { name: 'Cement Bags', slug: 'cement-bags', icon: '🏗️', desc: 'Heavy-duty cement bags' },
   { name: 'Food Grain Bags', slug: 'food-grain-bags', icon: '🌾', desc: 'Food-grade storage bags' },
+  { name: 'Plastic Granules', slug: 'plastic-granules', icon: '🔄', desc: 'Recycled & virgin plastic granules' },
+  { name: 'PP Granules', slug: 'pp-granules', icon: '⚙️', desc: 'Polypropylene granules for manufacturing' },
 ];
 
 export default function CategoryGrid() {
