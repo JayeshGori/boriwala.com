@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FiHome, FiGrid, FiPackage, FiMessageSquare, FiSettings, FiLogOut, FiX, FiUsers, FiBell } from 'react-icons/fi';
+import { FiHome, FiGrid, FiPackage, FiMessageSquare, FiSettings, FiLogOut, FiX, FiUsers, FiBell, FiShoppingBag } from 'react-icons/fi';
 import { useAdmin } from '@/lib/admin-auth';
 
 const navItems = [
@@ -11,6 +11,7 @@ const navItems = [
   { href: '/admin/products', label: 'Products', icon: FiPackage },
   { href: '/admin/buyers', label: 'Buyers', icon: FiUsers },
   { href: '/admin/enquiries', label: 'Enquiries', icon: FiMessageSquare },
+  { href: '/admin/seller-enquiries', label: 'Seller Enquiries', icon: FiShoppingBag },
   { href: '/admin/notifications', label: 'Notifications', icon: FiBell },
   { href: '/admin/settings', label: 'Settings', icon: FiSettings },
 ];

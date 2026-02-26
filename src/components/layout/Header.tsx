@@ -138,6 +138,12 @@ export default function Header() {
             ) : null}
 
             <Link
+              href="/sell-to-us"
+              className="ml-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg transition-colors"
+            >
+              Sell to Us
+            </Link>
+            <Link
               href="/contact"
               className="ml-1 px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold rounded-lg transition-colors"
             >
@@ -206,6 +212,13 @@ export default function Header() {
               </div>
             ) : null}
 
+            <Link
+              href="/sell-to-us"
+              onClick={() => setIsOpen(false)}
+              className="block mx-4 mt-2 px-5 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-lg text-center transition-colors"
+            >
+              Sell to Us
+            </Link>
             <Link
               href="/contact"
               onClick={() => setIsOpen(false)}
