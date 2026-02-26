@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { FaWhatsapp } from 'react-icons/fa';
-import { FiMessageSquare } from 'react-icons/fi';
+import { FiMessageSquare, FiLock } from 'react-icons/fi';
 import { IProduct } from '@/types';
 import { formatPrice, getWhatsAppLink } from '@/lib/utils';
+import { useBuyerAuth } from '@/context/BuyerAuthContext';
 
 interface ProductCardProps {
   product: IProduct;
@@ -22,6 +23,7 @@ const availConfig: Record<string, { label: string; color: string }> = {
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const { isApproved, buyer } = useBuyerAuth();
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919999999999';
   const whatsappMessage = `Hi, I'm interested in: *${product.name}*\nPlease share pricing and availability details.`;
 
@@ -31,6 +33,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const cond = conditionConfig[product.condition] || conditionConfig.new;
   const avail = availConfig[product.availability] || availConfig.in_stock;
+  const canSeePrice = isApproved;
 
   // Show up to 3 key specs
   const keySpecs = product.specifications?.slice(0, 3) || [];
@@ -92,7 +95,14 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="flex items-center justify-between mb-2">
             <div>
               {product.showPrice && product.price ? (
-                <span className="text-base font-bold text-slate-800">{formatPrice(product.price)}</span>
+                canSeePrice ? (
+                  <span className="text-base font-bold text-slate-800">{formatPrice(product.price)}</span>
+                ) : (
+                  <Link href={buyer ? '#' : '/login'} className="flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-amber-600">
+                    <FiLock size={12} />
+                    {buyer ? 'Approval pending' : 'Login to see price'}
+                  </Link>
+                )
               ) : (
                 <span className="text-xs font-medium text-amber-600">Contact for Price</span>
               )}

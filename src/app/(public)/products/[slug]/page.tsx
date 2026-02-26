@@ -9,6 +9,7 @@ import EnquiryForm from '@/components/forms/EnquiryForm';
 import ProductCard from '@/components/products/ProductCard';
 import { IProduct } from '@/types';
 import { formatPrice, getWhatsAppLink } from '@/lib/utils';
+import { useBuyerAuth } from '@/context/BuyerAuthContext';
 
 const conditionLabels: Record<string, { label: string; bg: string }> = {
   new: { label: 'NEW', bg: 'bg-emerald-500' },
@@ -24,6 +25,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(0);
   const [showEnquiry, setShowEnquiry] = useState(searchParams.get('enquiry') === 'true');
+  const { isApproved, buyer } = useBuyerAuth();
+  const canSeePrice = isApproved;
 
   useEffect(() => {
     fetch(`/api/products/${slug}`)
@@ -177,7 +180,19 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
 
             <div className="flex flex-wrap items-center gap-3 mt-4">
               {product.showPrice && product.price ? (
-                <span className="text-3xl font-bold text-slate-800">{formatPrice(product.price)}</span>
+                canSeePrice ? (
+                  <span className="text-3xl font-bold text-slate-800">{formatPrice(product.price)}</span>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-semibold text-slate-400 blur-sm select-none" aria-hidden>₹XX,XXX</span>
+                    <Link
+                      href={buyer ? '#' : '/login'}
+                      className="px-3 py-1 bg-slate-100 text-slate-600 text-sm font-medium rounded-lg hover:bg-amber-50 hover:text-amber-700 transition-colors"
+                    >
+                      {buyer ? '⏳ Pending approval' : '🔒 Login to see price'}
+                    </Link>
+                  </div>
+                )
               ) : (
                 <span className="text-lg font-semibold text-amber-600">Contact for Price</span>
               )}
