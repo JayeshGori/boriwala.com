@@ -9,17 +9,20 @@ export interface IProductDoc {
   video?: string;
   category: mongoose.Types.ObjectId;
   subcategory?: mongoose.Types.ObjectId;
-  condition: 'new' | 'old';
+  condition: 'new' | 'old' | 'rejected';
   price?: number;
   showPrice: boolean;
   specifications: { key: string; value: string }[];
+  filterAttributes: Record<string, string>;
   moq: string;
-  availability: 'in_stock' | 'out_of_stock' | 'on_demand';
+  availability: 'in_stock' | 'out_of_stock' | 'on_demand' | 'make_to_order';
   isFeatured: boolean;
   isActive: boolean;
   tags: string[];
   material?: string;
   productType?: string;
+  size?: string;
+  application?: string;
 }
 
 const ProductSchema = new Schema<IProductDoc>(
@@ -32,7 +35,7 @@ const ProductSchema = new Schema<IProductDoc>(
     video: { type: String, default: '' },
     category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
     subcategory: { type: Schema.Types.ObjectId, ref: 'Category', default: null },
-    condition: { type: String, enum: ['new', 'old'], default: 'new' },
+    condition: { type: String, enum: ['new', 'old', 'rejected'], default: 'new' },
     price: { type: Number, default: null },
     showPrice: { type: Boolean, default: false },
     specifications: [
@@ -41,10 +44,11 @@ const ProductSchema = new Schema<IProductDoc>(
         value: { type: String, required: true },
       },
     ],
+    filterAttributes: { type: Map, of: String, default: {} },
     moq: { type: String, default: '1' },
     availability: {
       type: String,
-      enum: ['in_stock', 'out_of_stock', 'on_demand'],
+      enum: ['in_stock', 'out_of_stock', 'on_demand', 'make_to_order'],
       default: 'in_stock',
     },
     isFeatured: { type: Boolean, default: false },
@@ -52,6 +56,8 @@ const ProductSchema = new Schema<IProductDoc>(
     tags: [{ type: String }],
     material: { type: String, default: '' },
     productType: { type: String, default: '' },
+    size: { type: String, default: '' },
+    application: { type: String, default: '' },
   },
   { timestamps: true }
 );

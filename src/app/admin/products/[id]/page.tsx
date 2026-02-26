@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { adminFetch, adminUpload } from '@/lib/admin-auth';
 import toast from 'react-hot-toast';
 import { FiPlus, FiTrash2, FiUpload } from 'react-icons/fi';
+import { getFiltersForCategory } from '@/lib/filter-definitions';
 
 interface Category {
   _id: string;
@@ -28,10 +29,11 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     video: '',
     category: '',
     subcategory: '',
-    condition: 'new' as 'new' | 'old',
+    condition: 'new' as 'new' | 'old' | 'rejected',
     price: '',
     showPrice: false,
     specifications: [] as Spec[],
+    filterAttributes: {} as Record<string, string>,
     moq: '',
     availability: 'in_stock',
     isFeatured: false,
@@ -67,6 +69,9 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           price: p.price?.toString() || '',
           showPrice: p.showPrice || false,
           specifications: p.specifications || [],
+          filterAttributes: p.filterAttributes instanceof Map
+            ? Object.fromEntries(p.filterAttributes)
+            : (p.filterAttributes || {}),
           moq: p.moq || '',
           availability: p.availability || 'in_stock',
           isFeatured: p.isFeatured || false,
@@ -159,6 +164,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         price: form.price ? parseFloat(form.price) : null,
         tags: form.tags.split(',').map((t) => t.trim()).filter(Boolean),
         specifications: form.specifications.filter((s) => s.key && s.value),
+        filterAttributes: form.filterAttributes,
         subcategory: form.subcategory || null,
       };
       const data = await adminFetch(`/api/products/${id}`, { method: 'PUT', body: JSON.stringify(body) });
@@ -264,6 +270,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
               <select name="condition" value={form.condition} onChange={handleChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none">
                 <option value="new">New</option>
                 <option value="old">Used / Old</option>
+                <option value="rejected">Rejected</option>
               </select>
             </div>
             <div>
@@ -272,6 +279,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                 <option value="in_stock">In Stock</option>
                 <option value="out_of_stock">Out of Stock</option>
                 <option value="on_demand">On Demand</option>
+                <option value="make_to_order">Make to Order</option>
               </select>
             </div>
             <div>
@@ -305,6 +313,44 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
         </div>
+
+        {/* Filter Attributes (dynamic per category) */}
+        {form.category && (() => {
+          const cat = categories.find(c => c._id === form.category);
+          const sub = subcategories.find(c => c._id === form.subcategory);
+          const catSlug = cat?.name ? cat.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : '';
+          const subSlug = sub?.name ? sub.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : '';
+          const filterDefs = getFiltersForCategory(catSlug, subSlug);
+          if (filterDefs.length === 0) return null;
+          return (
+            <div className="bg-white rounded-xl border border-slate-200 p-6">
+              <h3 className="text-lg font-semibold text-slate-800 mb-4">Filter Attributes</h3>
+              <p className="text-xs text-slate-400 mb-3">These filters help buyers find this product.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {filterDefs.map((fd) => (
+                  <div key={fd.key}>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">{fd.label}</label>
+                    <select
+                      value={form.filterAttributes[fd.key] || ''}
+                      onChange={(e) => {
+                        const newFa = { ...form.filterAttributes };
+                        if (e.target.value) newFa[fd.key] = e.target.value;
+                        else delete newFa[fd.key];
+                        setForm({ ...form, filterAttributes: newFa });
+                      }}
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none"
+                    >
+                      <option value="">-- Select --</option>
+                      {fd.options.map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Specifications */}
         <div className="bg-white rounded-xl border border-slate-200 p-6">

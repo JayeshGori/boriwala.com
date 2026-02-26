@@ -28,17 +28,20 @@ export interface IProduct {
   video?: string;
   category: string | ICategory;
   subcategory?: string | ICategory;
-  condition: 'new' | 'old';
+  condition: 'new' | 'old' | 'rejected';
   price?: number;
   showPrice: boolean;
   specifications: ISpecification[];
+  filterAttributes: Record<string, string>;
   moq: string;
-  availability: 'in_stock' | 'out_of_stock' | 'on_demand';
+  availability: 'in_stock' | 'out_of_stock' | 'on_demand' | 'make_to_order';
   isFeatured: boolean;
   isActive: boolean;
   tags: string[];
   material?: string;
   productType?: string;
+  size?: string;
+  application?: string;
   createdAt: string;
   updatedAt: string;
 }

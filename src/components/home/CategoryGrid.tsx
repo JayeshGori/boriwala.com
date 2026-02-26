@@ -2,15 +2,20 @@ import Link from 'next/link';
 
 const categories = [
   { name: 'PP Bags', slug: 'pp-bags', icon: '📦', desc: 'New & used polypropylene bags' },
+  { name: 'BOPP Bags', slug: 'bopp-bags', icon: '🏷️', desc: 'Premium BOPP laminated bags' },
   { name: 'Jute Bags', slug: 'jute-bags', icon: '🌿', desc: 'Eco-friendly jute packaging' },
-  { name: 'Plastic Products', slug: 'plastic-products', icon: '🏭', desc: 'Industrial plastic products' },
-  { name: 'Packaging Materials', slug: 'packaging-materials', icon: '📋', desc: 'Complete packaging solutions' },
-  { name: 'Scrap Materials', slug: 'scrap-materials', icon: '♻️', desc: 'Recyclable scrap materials' },
-  { name: 'HDPE Bags', slug: 'hdpe-bags', icon: '🛍️', desc: 'High-density PE bags' },
-  { name: 'Cement Bags', slug: 'cement-bags', icon: '🏗️', desc: 'Heavy-duty cement bags' },
+  { name: 'Cement Bags', slug: 'cement-bags', icon: '�️', desc: 'Heavy-duty cement bags' },
   { name: 'Food Grain Bags', slug: 'food-grain-bags', icon: '🌾', desc: 'Food-grade storage bags' },
-  { name: 'Plastic Granules', slug: 'plastic-granules', icon: '🔄', desc: 'Recycled & virgin plastic granules' },
-  { name: 'PP Granules', slug: 'pp-granules', icon: '⚙️', desc: 'Polypropylene granules for manufacturing' },
+  { name: 'Monofilament Bags', slug: 'monofilament-bags', icon: '🧅', desc: 'Mesh bags for vegetables' },
+  { name: 'PP Granules', slug: 'pp-granules', icon: '⚙️', desc: 'Reprocessed PP granules' },
+  { name: 'Leno Bags', slug: 'leno-bags', icon: '🥔', desc: 'Leno bags for produce packing' },
+  { name: 'Jumbo Bags', slug: 'jumbo-bags', icon: '📐', desc: 'FIBC jumbo bags for bulk' },
+  { name: 'Anti Slip Bags', slug: 'anti-slip-bags', icon: '🛡️', desc: 'HAL & FCI anti-slip bags' },
+  { name: 'Lacha Sutli', slug: 'lacha-sutli', icon: '🪢', desc: 'Virgin & semi-virgin sutli' },
+  { name: 'Belar Twine', slug: 'belar-twine', icon: '🧵', desc: 'Industrial belar twine' },
+  { name: 'Industrial Used PP Bags', slug: 'industrial-used-pp-bags', icon: '♻️', desc: 'Bulk used PP bags' },
+  { name: 'Patta Fabric', slug: 'patta-fabric', icon: '🧶', desc: 'PP woven fabric / chalakha' },
+  { name: 'Used Worn Sarees', slug: 'used-worn-sarees', icon: '👗', desc: 'Sarees for veg packing' },
 ];
 
 export default function CategoryGrid() {

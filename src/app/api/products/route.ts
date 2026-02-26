@@ -10,14 +10,28 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '12');
-    const category = searchParams.get('category');
-    const subcategory = searchParams.get('subcategory');
+    let category = searchParams.get('category');
+    let subcategory = searchParams.get('subcategory');
     const condition = searchParams.get('condition');
     const featured = searchParams.get('featured');
     const search = searchParams.get('search');
     const material = searchParams.get('material');
     const productType = searchParams.get('productType');
     const activeOnly = searchParams.get('activeOnly') !== 'false';
+    const sort = searchParams.get('sort') || 'newest';
+
+    // Resolve slug to ObjectId if needed
+    const Category = (await import('@/lib/models/Category')).default;
+    if (category && !category.match(/^[0-9a-fA-F]{24}$/)) {
+      const cat = await Category.findOne({ slug: category }).lean();
+      if (cat) category = cat._id.toString();
+      else category = null;
+    }
+    if (subcategory && !subcategory.match(/^[0-9a-fA-F]{24}$/)) {
+      const sub = await Category.findOne({ slug: subcategory }).lean();
+      if (sub) subcategory = sub._id.toString();
+      else subcategory = null;
+    }
 
     const filter: Record<string, unknown> = {};
     if (activeOnly) filter.isActive = true;
@@ -32,14 +46,31 @@ export async function GET(req: NextRequest) {
         { name: { $regex: search, $options: 'i' } },
         { description: { $regex: search, $options: 'i' } },
         { tags: { $regex: search, $options: 'i' } },
+        { material: { $regex: search, $options: 'i' } },
       ];
     }
+
+    // Filter by filterAttributes (e.g. ?fa_quality=gold&fa_gram=5)
+    for (const [key, val] of searchParams.entries()) {
+      if (key.startsWith('fa_') && val) {
+        const attrKey = key.slice(3);
+        filter[`filterAttributes.${attrKey}`] = val;
+      }
+    }
+
+    // Sort options
+    let sortObj: Record<string, 1 | -1> = { isFeatured: -1, createdAt: -1 };
+    if (sort === 'oldest') sortObj = { createdAt: 1 };
+    else if (sort === 'name_asc') sortObj = { name: 1 };
+    else if (sort === 'name_desc') sortObj = { name: -1 };
+    else if (sort === 'price_asc') sortObj = { price: 1 };
+    else if (sort === 'price_desc') sortObj = { price: -1 };
 
     const total = await Product.countDocuments(filter);
     const products = await Product.find(filter)
       .populate('category', 'name slug')
       .populate('subcategory', 'name slug')
-      .sort({ isFeatured: -1, createdAt: -1 })
+      .sort(sortObj)
       .skip((page - 1) * limit)
       .limit(limit)
       .lean();
@@ -49,6 +80,9 @@ export async function GET(req: NextRequest) {
       _id: p._id.toString(),
       category: p.category || null,
       subcategory: p.subcategory || null,
+      filterAttributes: p.filterAttributes instanceof Map
+        ? Object.fromEntries(p.filterAttributes)
+        : (p.filterAttributes || {}),
     }));
 
     return NextResponse.json({

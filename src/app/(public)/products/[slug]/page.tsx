@@ -1,21 +1,29 @@
 'use client';
 
 import { useEffect, useState, use } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { FaWhatsapp } from 'react-icons/fa';
-import { FiChevronRight, FiCheck, FiX, FiClock } from 'react-icons/fi';
+import { FiChevronRight, FiCheck, FiX, FiClock, FiTruck } from 'react-icons/fi';
 import EnquiryForm from '@/components/forms/EnquiryForm';
 import ProductCard from '@/components/products/ProductCard';
 import { IProduct } from '@/types';
 import { formatPrice, getWhatsAppLink } from '@/lib/utils';
 
+const conditionLabels: Record<string, { label: string; bg: string }> = {
+  new: { label: 'NEW', bg: 'bg-emerald-500' },
+  old: { label: 'USED', bg: 'bg-orange-500' },
+  rejected: { label: 'REJECTED', bg: 'bg-red-500' },
+};
+
 export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
+  const searchParams = useSearchParams();
   const [product, setProduct] = useState<IProduct | null>(null);
   const [related, setRelated] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(0);
-  const [showEnquiry, setShowEnquiry] = useState(false);
+  const [showEnquiry, setShowEnquiry] = useState(searchParams.get('enquiry') === 'true');
 
   useEffect(() => {
     fetch(`/api/products/${slug}`)
@@ -23,7 +31,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
       .then((d) => {
         if (d.success) {
           setProduct(d.data);
-          // Fetch related products
           const catId = typeof d.data.category === 'object' ? d.data.category._id : d.data.category;
           if (catId) {
             fetch(`/api/products?category=${catId}&limit=4`)
@@ -69,14 +76,21 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
     );
   }
 
-  const categoryName = typeof product.category === 'object' ? (product.category as { name: string; slug?: string }).name : '';
+  const catObj = typeof product.category === 'object' ? product.category as { name: string; slug?: string } : null;
+  const categoryName = catObj?.name || '';
+  const categorySlug = catObj?.slug || '';
+  const subObj = typeof product.subcategory === 'object' && product.subcategory ? product.subcategory as { name: string; slug?: string } : null;
+
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919999999999';
   const whatsappMsg = `Hi, I'm interested in: *${product.name}*\n\nPlease share pricing and availability details.\n\nThank you.`;
 
-  const availabilityConfig = {
+  const cond = conditionLabels[product.condition] || conditionLabels.new;
+
+  const availabilityConfig: Record<string, { label: string; icon: typeof FiCheck; color: string }> = {
     in_stock: { label: 'In Stock', icon: FiCheck, color: 'text-green-600 bg-green-50' },
     out_of_stock: { label: 'Out of Stock', icon: FiX, color: 'text-red-600 bg-red-50' },
     on_demand: { label: 'On Demand', icon: FiClock, color: 'text-amber-600 bg-amber-50' },
+    make_to_order: { label: 'Make to Order', icon: FiTruck, color: 'text-blue-600 bg-blue-50' },
   };
   const avail = availabilityConfig[product.availability] || availabilityConfig.in_stock;
   const AvailIcon = avail.icon;
@@ -86,14 +100,20 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
       {/* Breadcrumb */}
       <div className="bg-slate-50 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 py-3">
-          <nav className="flex items-center gap-2 text-sm text-slate-500">
+          <nav className="flex items-center gap-2 text-sm text-slate-500 flex-wrap">
             <Link href="/" className="hover:text-amber-600">Home</Link>
             <FiChevronRight size={14} />
             <Link href="/products" className="hover:text-amber-600">Products</Link>
             {categoryName && (
               <>
                 <FiChevronRight size={14} />
-                <span className="text-slate-400">{categoryName}</span>
+                <Link href={`/products?category=${categorySlug}`} className="hover:text-amber-600">{categoryName}</Link>
+              </>
+            )}
+            {subObj && (
+              <>
+                <FiChevronRight size={14} />
+                <Link href={`/products?category=${categorySlug}&subcategory=${subObj.slug}`} className="hover:text-amber-600">{subObj.name}</Link>
               </>
             )}
             <FiChevronRight size={14} />
@@ -121,8 +141,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                   </svg>
                 </div>
               )}
-              <span className={`absolute top-4 left-4 px-3 py-1 text-xs font-bold rounded-full ${product.condition === 'new' ? 'bg-emerald-500 text-white' : 'bg-orange-500 text-white'}`}>
-                {product.condition === 'new' ? 'NEW' : 'USED'}
+              <span className={`absolute top-4 left-4 px-3 py-1 text-xs font-bold rounded-full text-white ${cond.bg}`}>
+                {cond.label}
               </span>
             </div>
             {product.images && product.images.length > 1 && (
@@ -151,7 +171,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
           {/* Product info */}
           <div>
             {categoryName && (
-              <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider">{categoryName}</span>
+              <Link href={`/products?category=${categorySlug}`} className="text-xs font-semibold text-amber-600 uppercase tracking-wider hover:underline">{categoryName}</Link>
             )}
             <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mt-1">{product.name}</h1>
 
