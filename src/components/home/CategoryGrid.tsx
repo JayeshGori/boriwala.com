@@ -1,21 +1,25 @@
 import Link from 'next/link';
 
 const categories = [
-  { name: 'PP Bags', slug: 'pp-bags', icon: '📦', desc: 'New & used polypropylene bags' },
+  { 
+    name: 'PP Bags/Fabric', 
+    slug: 'pp-bags-fabric', 
+    icon: '📦', 
+    desc: 'PP bags and woven fabric',
+    subcategories: [
+      { name: 'Cement Bags', slug: 'cement-bags', icon: '🏗️' },
+      { name: 'Food Grain Bags', slug: 'food-grain-bags', icon: '🌾' },
+      { name: 'Industrial Used PP Bags', slug: 'industrial-used-pp-bags', icon: '♻️' },
+      { name: 'Patta Fabric', slug: 'patta-fabric', icon: '🧶' },
+    ]
+  },
   { name: 'BOPP Bags', slug: 'bopp-bags', icon: '🏷️', desc: 'Premium BOPP laminated bags' },
   { name: 'Jute Bags', slug: 'jute-bags', icon: '🌿', desc: 'Eco-friendly jute packaging' },
-  { name: 'Cement Bags', slug: 'cement-bags', icon: '🏗️', desc: 'Heavy-duty cement bags' },
-  { name: 'Food Grain Bags', slug: 'food-grain-bags', icon: '🌾', desc: 'Food-grade storage bags' },
   { name: 'Monofilament Bags', slug: 'monofilament-bags', icon: '🧅', desc: 'Mesh bags for vegetables' },
+  { name: 'Leno Bags', slug: 'leno-bags', icon: '�', desc: 'Leno bags for produce packing' },
   { name: 'PP Granules', slug: 'pp-granules', icon: '⚙️', desc: 'Reprocessed PP granules' },
-  { name: 'Leno Bags', slug: 'leno-bags', icon: '🥔', desc: 'Leno bags for produce packing' },
-  { name: 'Jumbo Bags', slug: 'jumbo-bags', icon: '📐', desc: 'FIBC jumbo bags for bulk' },
-  { name: 'Anti Slip Bags', slug: 'anti-slip-bags', icon: '🛡️', desc: 'HAL & FCI anti-slip bags' },
-  { name: 'Lacha Sutli', slug: 'lacha-sutli', icon: '🪢', desc: 'Virgin & semi-virgin sutli' },
-  { name: 'Belar Twine', slug: 'belar-twine', icon: '🧵', desc: 'Industrial belar twine' },
-  { name: 'Industrial Used PP Bags', slug: 'industrial-used-pp-bags', icon: '♻️', desc: 'Bulk used PP bags' },
-  { name: 'Patta Fabric', slug: 'patta-fabric', icon: '🧶', desc: 'PP woven fabric / chalakha' },
   { name: 'Used Worn Sarees', slug: 'used-worn-sarees', icon: '👗', desc: 'Sarees for veg packing' },
+  { name: 'FIBC Jumbo Bags', slug: 'jumbo-bags', icon: '�', desc: 'FIBC jumbo bags for bulk' },
 ];
 
 export default function CategoryGrid() {
@@ -38,6 +42,18 @@ export default function CategoryGrid() {
               <span className="text-4xl block mb-3">{cat.icon}</span>
               <h3 className="font-semibold text-slate-800 group-hover:text-amber-700 transition-colors">{cat.name}</h3>
               <p className="text-sm text-slate-500 mt-1">{cat.desc}</p>
+              {cat.subcategories && (
+                <div className="mt-3 pt-3 border-t border-slate-200">
+                  <p className="text-xs text-amber-600 font-medium mb-2">Includes:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {cat.subcategories.map((sub) => (
+                      <span key={sub.slug} className="text-xs text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+                        {sub.icon} {sub.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </Link>
           ))}
         </div>
