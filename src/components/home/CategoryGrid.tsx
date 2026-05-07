@@ -8,7 +8,7 @@ const categories = [
     slug: 'pp-bags-fabric', 
     icon: '📦', 
     desc: 'PP bags and woven fabric',
-    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=300&fit=crop',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcITV7hy05B9EERn2hqeD8frjgL-Px8aZ9pw&s',
     subcategories: [
       { name: 'Cement Bags', slug: 'cement-bags', icon: '🏗️' },
       { name: 'Food Grain Bags', slug: 'food-grain-bags', icon: '🌾' },
@@ -16,13 +16,13 @@ const categories = [
       { name: 'Patta Fabric', slug: 'patta-fabric', icon: '🧶' },
     ]
   },
-  { name: 'BOPP Bags', slug: 'bopp-bags', icon: '🏷️', desc: 'Premium BOPP laminated bags', image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=300&fit=crop' },
-  { name: 'Jute Bags', slug: 'jute-bags', icon: '🌿', desc: 'Eco-friendly jute packaging', image: 'https://images.unsplash.com/photo-1615486342407-cf8fd79d8d59?w=400&h=300&fit=crop' },
-  { name: 'Monofilament Bags', slug: 'monofilament-bags', icon: '🧅', desc: 'Mesh bags for vegetables', image: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=400&h=300&fit=crop' },
-  { name: 'Leno Bags', slug: 'leno-bags', icon: '🥔', desc: 'Leno bags for produce packing', image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=300&fit=crop' },
-  { name: 'PP Granules', slug: 'pp-granules', icon: '⚙️', desc: 'Reprocessed PP granules', image: 'https://images.unsplash.com/photo-1516937941344-00b4e0337589?w=400&h=300&fit=crop' },
-  { name: 'Used Worn Sarees', slug: 'used-worn-sarees', icon: '👗', desc: 'Sarees for veg packing', image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=300&fit=crop' },
-  { name: 'FIBC Jumbo Bags', slug: 'jumbo-bags', icon: '📐', desc: 'FIBC jumbo bags for bulk', image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=300&fit=crop' },
+  { name: 'BOPP Bags', slug: 'bopp-bags', icon: '🏷️', desc: 'Premium BOPP laminated bags', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2Tv-UIEsSLcLDLxZd18n5333GlqHmV763UA&s' },
+  { name: 'Jute Bags', slug: 'jute-bags', icon: '🌿', desc: 'Eco-friendly jute packaging', image: 'https://5.imimg.com/data5/SELLER/Default/2023/9/345402631/OA/UB/CM/149005756/jute-sack-bags-250x250.jpg' },
+  { name: 'Monofilament Bags', slug: 'monofilament-bags', icon: '🧅', desc: 'Mesh bags for vegetables', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpJ3FMBstLlzhML6SXBnuxNwlfHNDylH7L-Q&s' },
+  { name: 'Leno Bags', slug: 'leno-bags', icon: '🥔', desc: 'Leno bags for produce packing', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNkixLS9_5XmWgtnmt9cEwEQ0cQzcZqg4IfA&s' },
+  { name: 'PP Granules', slug: 'pp-granules', icon: '⚙️', desc: 'Reprocessed PP granules', image: 'https://qualityplast.in/wp-content/uploads/2024/05/Untitled-design-86.jpeg' },
+  { name: 'Used Worn Sarees', slug: 'used-worn-sarees', icon: '👗', desc: 'Sarees for veg packing', image: 'https://5.imimg.com/data5/SELLER/Default/2023/12/372859847/BW/EV/NQ/10324145/multicolor-old-saree.jpg' },
+  { name: 'FIBC Jumbo Bags', slug: 'jumbo-bags', icon: '📐', desc: 'FIBC jumbo bags for bulk', image: 'https://5.imimg.com/data5/SELLER/Default/2021/6/PM/GF/RH/72368631/fibc-jumbo-bag-500x500.jpg' },
 ];
 
 export default function CategoryGrid() {
@@ -53,6 +53,13 @@ export default function CategoryGrid() {
               
               {/* Gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/70 to-transparent" />
+              
+              {/* Watermark */}
+              <div className="absolute top-3 right-3">
+                <span className="text-white/60 text-xs font-semibold tracking-wider bg-black/20 backdrop-blur-sm px-2 py-1 rounded">
+                  Boriwala.com
+                </span>
+              </div>
               
               {/* Content */}
               <div className="relative h-full flex flex-col justify-end p-6">
