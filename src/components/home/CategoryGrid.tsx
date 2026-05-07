@@ -23,117 +23,37 @@ const categories = [
 
 export default function CategoryGrid() {
   return (
-    <>
-      <style jsx global>{`
-        .preserve-3d {
-          transform-style: preserve-3d;
-        }
-        .rotate-y-180 {
-          transform: rotateY(180deg);
-        }
-        .backface-hidden {
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
-        }
-      `}</style>
-      <section className="py-16 md:py-24 bg-gradient-to-b from-slate-50 to-white relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-amber-500 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500 rounded-full blur-3xl" />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 relative">
-        <div className="text-center mb-16">
-          <span className="inline-flex items-center gap-2 px-4 py-2 bg-amber-100 text-amber-700 rounded-full text-sm font-semibold uppercase tracking-wider mb-4">
-            <FiPackage size={14} /> What We Deal In
-          </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mt-4 mb-4">
-            Product Categories
-          </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Explore our wide range of industrial packaging products and trading materials
-          </p>
+    <section className="py-16 md:py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="text-center mb-12">
+          <span className="text-amber-600 font-semibold text-sm uppercase tracking-wider">What We Deal In</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mt-2">Product Categories</h2>
+          <p className="text-slate-500 mt-3 max-w-xl mx-auto">Explore our wide range of industrial packaging products and trading materials</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-          {categories.map((cat, index) => (
-            <div key={cat.slug} className="perspective-1000">
-              <Link
-                href={`/products?category=${cat.slug}`}
-                className="group relative w-full h-64"
-                style={{ perspective: '1000px' }}
-              >
-                <div className="relative w-full h-full transition-transform duration-500 preserve-3d group-hover:rotate-y-180">
-                  {/* Front face */}
-                  <div className="absolute inset-0 bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 border border-slate-200/50 backface-hidden">
-                    {/* Gradient background on hover */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${cat.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
-                    
-                    {/* Icon container */}
-                    <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${cat.gradient} opacity-10 rounded-bl-3xl group-hover:opacity-20 transition-opacity duration-300`} />
-                    
-                    <div className="relative p-6 h-full flex flex-col">
-                      {/* Icon */}
-                      <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${cat.gradient} text-white shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                        <cat.icon size={24} />
-                      </div>
-                      
-                      {/* Content */}
-                      <h3 className="font-bold text-lg text-slate-800 group-hover:text-slate-900 mb-2">
-                        {cat.name}
-                      </h3>
-                      <p className="text-sm text-slate-500 group-hover:text-slate-600 leading-relaxed">
-                        {cat.desc}
-                      </p>
-                      
-                      {/* Arrow indicator */}
-                      <div className={`mt-auto flex items-center gap-2 text-xs font-semibold bg-gradient-to-r ${cat.gradient} bg-clip-text text-transparent opacity-0 group-hover:opacity-100 transition-all duration-300`}>
-                        Explore
-                        <FiPackage size={12} className="group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </div>
-                    
-                    {/* Bottom accent line */}
-                    <div className={`h-1 w-0 bg-gradient-to-r ${cat.gradient} group-hover:w-full transition-all duration-300`} />
-                  </div>
-                  
-                  {/* Back face with image */}
-                  <div className="absolute inset-0 rounded-2xl shadow-xl overflow-hidden backface-hidden rotate-y-180">
-                    <img
-                      src={cat.image}
-                      alt={cat.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className={`absolute inset-0 bg-gradient-to-t ${cat.gradient} opacity-80`} />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-center text-white">
-                        <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm mb-3`}>
-                          <cat.icon size={28} />
-                        </div>
-                        <h3 className="font-bold text-xl">{cat.name}</h3>
-                        <p className="text-sm mt-1 opacity-90">Tap to explore</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          {categories.map((cat) => (
+            <Link
+              key={cat.slug}
+              href={`/products?category=${cat.slug}`}
+              className="group p-6 bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-amber-300 rounded-xl transition-all hover:shadow-md"
+            >
+              <span className="text-4xl block mb-3"><cat.icon /></span>
+              <h3 className="font-semibold text-slate-800 group-hover:text-amber-700 transition-colors">{cat.name}</h3>
+              <p className="text-sm text-slate-500 mt-1">{cat.desc}</p>
+            </Link>
           ))}
         </div>
 
-        <div className="text-center mt-12">
+        <div className="text-center mt-8">
           <Link
             href="/categories"
-            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 px-6 py-2.5 border-2 border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white font-semibold rounded-lg transition-all text-sm"
           >
-            <FiPackage size={18} />
             View All Categories
-            <FiPackage size={18} className="rotate-45" />
           </Link>
         </div>
       </div>
     </section>
-    </>
   );
 }
