@@ -75,7 +75,7 @@ export default function Header() {
       <nav className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center gap-2">
-            <img src="/logo.svg" alt="Boriwala" className="h-10 w-auto" />
+            <img src="/logo.svg" alt="Boriwala" className="h-14 w-auto" />
           </Link>
 
           {/* Desktop nav */}
