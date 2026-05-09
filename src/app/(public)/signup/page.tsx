@@ -321,7 +321,7 @@ export default function BuyerSignupPage() {
                         name="phone"
                         value={form.phone}
                         onChange={handleChange}
-                        placeholder="+91 99999 99999"
+                        placeholder="+91 74053 37635"
                         autoComplete="tel"
                         className="w-full pl-11 pr-4 py-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none transition-shadow"
                       />

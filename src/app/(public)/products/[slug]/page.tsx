@@ -84,7 +84,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const categorySlug = catObj?.slug || '';
   const subObj = typeof product.subcategory === 'object' && product.subcategory ? product.subcategory as { name: string; slug?: string } : null;
 
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919999999999';
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '917405337635';
   const whatsappMsg = `Hi, I'm interested in: *${product.name}*\n\nPlease share pricing and availability details.\n\nThank you.`;
 
   const cond = conditionLabels[product.condition] || conditionLabels.new;

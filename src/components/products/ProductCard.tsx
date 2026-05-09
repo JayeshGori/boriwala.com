@@ -24,7 +24,7 @@ const availConfig: Record<string, { label: string; color: string }> = {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { isApproved, buyer } = useBuyerAuth();
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919999999999';
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '917405337635';
   const whatsappMessage = `Hi, I'm interested in: *${product.name}*\nPlease share pricing and availability details.`;
 
   const categoryName = typeof product.category === 'object' && product.category

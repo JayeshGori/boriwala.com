@@ -85,9 +85,11 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-4">Contact Us</h3>
             <div className="space-y-3">
-              <a href="tel:+919999999999" className="flex items-start gap-2 text-sm text-slate-400 hover:text-amber-400 transition-colors">
-                <FiPhone size={16} className="mt-0.5 shrink-0" />
-                +91 99999 99999
+              <a href="tel:+917405337635" className="flex items-start gap-2 text-sm text-slate-400 hover:text-amber-400 transition-colors">
+                <FiPhone size={16} />
+                <div>
+                  <p className="font-semibold">+91 74053 37635</p>
+                </div>
               </a>
               <a href="mailto:info@boriwala.com" className="flex items-start gap-2 text-sm text-slate-400 hover:text-amber-400 transition-colors">
                 <FiMail size={16} className="mt-0.5 shrink-0" />
@@ -98,10 +100,10 @@ export default function Footer() {
                 Mumbai, Maharashtra, India
               </div>
               <a
-                href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919999999999'}`}
+                href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '917405337635'}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 mt-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors"
+                className="flex items-start gap-2 text-sm text-slate-400 hover:text-amber-400 transition-colors"
               >
                 <FaWhatsapp size={16} />
                 WhatsApp Us

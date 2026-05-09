@@ -41,9 +41,9 @@ export default function Header() {
       <div className="bg-slate-800 text-white text-sm">
         <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <a href="tel:+919999999999" className="flex items-center gap-1 hover:text-amber-400 transition-colors">
+            <a href="tel:+917405337635" className="flex items-center gap-1 hover:text-amber-400 transition-colors">
               <FiPhone size={13} />
-              <span className="hidden sm:inline">+91 99999 99999</span>
+              <span className="hidden sm:inline">+91 74053 37635</span>
             </a>
             <a href="mailto:info@boriwala.com" className="flex items-center gap-1 hover:text-amber-400 transition-colors">
               <FiMail size={13} />
@@ -52,7 +52,7 @@ export default function Header() {
           </div>
           <div className="flex items-center gap-4">
             <a
-              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919999999999'}`}
+              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '917405337635'}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 hover:text-green-400 transition-colors"

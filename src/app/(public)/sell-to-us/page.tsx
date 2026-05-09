@@ -245,17 +245,17 @@ export default function SellToUsPage() {
                 <p className="text-green-100 mb-6">Prefer to talk directly? Reach us via phone or WhatsApp for an instant quote.</p>
                 <div className="space-y-3">
                   <a
-                    href="tel:+919999999999"
+                    href="tel:+917405337635"
                     className="flex items-center gap-3 p-4 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"
                   >
-                    <FiPhone size={20} />
+                    <FiPhone size={16} />
                     <div>
                       <p className="text-sm text-green-200">Call Us</p>
-                      <p className="font-semibold">+91 99999 99999</p>
+                      <p className="font-semibold">+91 74053 37635</p>
                     </div>
                   </a>
                   <a
-                    href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919999999999'}?text=Hi, I want to sell used bags/materials. Please contact me.`}
+                    href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '917405337635'}?text=Hi, I want to sell used bags/materials. Please contact me.`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 p-4 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"
@@ -308,7 +308,7 @@ export default function SellToUsPage() {
                       value={form.phone}
                       onChange={handleChange}
                       required
-                      placeholder="+91 99999 99999"
+                      placeholder="+91 74053 37635"
                       className="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
                     />
                   </div>
