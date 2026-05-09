@@ -208,9 +208,7 @@ export default function BuyerSignupPage() {
 
             <div className="relative z-10">
               <div className="flex items-center gap-2 mb-8">
-                <div className="w-9 h-9 bg-amber-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-                  B
-                </div>
+                <img src="/logo.svg" alt="Boriwala" className="h-9 w-auto" />
                 <span className="font-bold text-white text-lg">Boriwala</span>
               </div>
 

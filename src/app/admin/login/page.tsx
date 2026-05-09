@@ -33,9 +33,7 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-amber-500 rounded-2xl flex items-center justify-center text-white font-bold text-3xl mx-auto mb-4">
-            B
-          </div>
+          <img src="/logo.svg" alt="Boriwala" className="h-16 w-auto mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-white">Admin Login</h1>
           <p className="text-slate-400 text-sm mt-1">Boriwala Trading Co.</p>
         </div>

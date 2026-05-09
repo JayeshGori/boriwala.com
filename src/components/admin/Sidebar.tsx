@@ -36,9 +36,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-700">
           <Link href="/admin" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-              B
-            </div>
+            <img src="/logo.svg" alt="Boriwala" className="h-8 w-auto" />
             <span className="font-bold text-lg">Admin</span>
           </Link>
           <button onClick={onClose} className="lg:hidden text-slate-400 hover:text-white">

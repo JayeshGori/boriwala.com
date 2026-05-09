@@ -75,13 +75,7 @@ export default function Header() {
       <nav className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-              B
-            </div>
-            <div>
-              <span className="text-xl font-bold text-slate-800 tracking-tight">Boriwala</span>
-              <span className="hidden sm:block text-[10px] text-slate-500 -mt-1 tracking-wider uppercase">Trading Co.</span>
-            </div>
+            <img src="/logo.svg" alt="Boriwala" className="h-10 w-auto" />
           </Link>
 
           {/* Desktop nav */}

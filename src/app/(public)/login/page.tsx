@@ -35,9 +35,7 @@ export default function BuyerLoginPage() {
     <div className="min-h-[70vh] flex items-center justify-center py-12 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="w-14 h-14 bg-amber-500 rounded-xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">
-            B
-          </div>
+          <img src="/logo.svg" alt="Boriwala" className="h-14 w-auto mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-slate-800">Buyer Login</h1>
           <p className="text-slate-500 text-sm mt-1">Login to view product pricing and place enquiries</p>
         </div>

@@ -1,0 +1,46 @@
+<svg width="350" height="100" viewBox="0 0 350 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Gradient for bag -->
+    <linearGradient id="bagGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f46f25;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8c42;stop-opacity:1" />
+    </linearGradient>
+    <!-- Gradient for text -->
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1a73e8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4285f4;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Industrial Sack Bag Icon -->
+  <g transform="translate(8, 8)">
+    <!-- Shadow -->
+    <ellipse cx="30" cy="72" rx="28" ry="4" fill="rgba(0,0,0,0.1)"/>
+    <!-- Bag body - realistic sack shape with folds -->
+    <path d="M3 18 L3 58 Q3 68 13 68 L47 68 Q57 68 57 58 L57 18 Q57 10 47 10 L13 10 Q3 10 3 18" fill="url(#bagGradient)" stroke="#f46f25" stroke-width="2.5"/>
+    <!-- Top seam/closure area -->
+    <rect x="8" y="10" width="44" height="10" rx="2" fill="#1a73e8" stroke="#1a73e8" stroke-width="1"/>
+    <!-- Detailed woven texture - horizontal lines -->
+    <path d="M8 28 L52 28 M8 34 L52 34 M8 40 L52 40 M8 46 L52 46 M8 52 L52 46 M8 58 L52 58" stroke="white" stroke-width="0.8" stroke-opacity="0.25"/>
+    <!-- Detailed woven texture - vertical lines -->
+    <path d="M14 24 L14 64 M20 24 L20 64 M26 24 L26 64 M32 24 L32 64 M38 24 L38 64 M44 24 L44 64 M50 24 L50 64" stroke="white" stroke-width="0.8" stroke-opacity="0.25"/>
+    <!-- Fold/crease lines for realism -->
+    <path d="M8 30 Q15 32 22 30" stroke="#d45a15" stroke-width="1" stroke-opacity="0.4" fill="none"/>
+    <path d="M38 30 Q45 32 52 30" stroke="#d45a15" stroke-width="1" stroke-opacity="0.4" fill="none"/>
+    <!-- Shine/highlight -->
+    <path d="M6 22 L6 54" stroke="white" stroke-width="2.5" stroke-opacity="0.35" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Company Name with simple unique font -->
+  <text x="80" y="48" font-family="'Montserrat', 'Raleway', 'Open Sans', sans-serif" font-size="28" font-weight="700" letter-spacing="2" fill="url(#textGradient)">
+    BORIWALA
+  </text>
+  
+  <!-- Decorative line -->
+  <line x1="80" y1="56" x2="240" y2="56" stroke="#f46f25" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Tagline with elegant font -->
+  <text x="80" y="76" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#f46f25" letter-spacing="3">
+    BAGS THAT MATTER
+  </text>
+</svg>
