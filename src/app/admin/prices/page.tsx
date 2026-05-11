@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { adminFetch } from '@/lib/admin-auth';
 import toast from 'react-hot-toast';
-import { FiPlus, FiEdit2, FiTrash2, FiX, FiRefreshCw, FiTrendingUp, FiTrendingDown, FiMinus, FiLock, FiUnlock } from 'react-icons/fi';
+import { FiPlus, FiEdit2, FiTrash2, FiX, FiRefreshCw, FiTrendingUp, FiTrendingDown, FiMinus, FiLock, FiUnlock, FiRotateCcw } from 'react-icons/fi';
 
 interface Price {
   _id: string;
@@ -130,6 +130,17 @@ export default function AdminPricesPage() {
     if (data.success) fetchPrices();
   };
 
+  const resetDefaults = async () => {
+    if (!confirm('This will DELETE all existing price rows and recreate the 5 default rows (PP, HDPE, LLDPE, Jute, Jute MSP). Continue?')) return;
+    const data = await adminFetch('/api/admin/prices/reset', { method: 'POST' });
+    if (data.success) {
+      toast.success('Defaults restored');
+      fetchPrices();
+    } else {
+      toast.error(data.error || 'Reset failed');
+    }
+  };
+
   const triggerScrape = async () => {
     setScraping(true);
     try {
@@ -161,7 +172,14 @@ export default function AdminPricesPage() {
             Manage live polymer & jute prices shown in the website header ticker.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
+          <button
+            onClick={resetDefaults}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium"
+            title="Wipe all rows and recreate the 5 default rows"
+          >
+            <FiRotateCcw size={16} /> Reset to Defaults
+          </button>
           <button
             onClick={triggerScrape}
             disabled={scraping}

@@ -12,17 +12,16 @@ export interface PolymerScrapeRow {
 
 const PLASTEMART_URL = 'https://www.plastemart.com/upload/PriceTracker/PriceTracker.aspx';
 
-// Map plastemart-style headings to our internal names
+// Map plastemart-style headings to our internal names (lowercased).
+// Matches our simplified PP / HDPE / LLDPE benchmark rows.
 const NAME_HINTS: Record<string, string> = {
-  'pp raffia': 'pp raffia',
-  'pp inj': 'pp injection',
-  'pp injection': 'pp injection',
-  'hdpe blow': 'hdpe blow',
-  'hdpe film': 'hdpe film',
-  'ldpe film': 'ldpe film',
-  'lldpe film': 'lldpe film',
-  'pvc': 'pvc suspension',
-  'pet bottle': 'pet bottle grade',
+  'pp raffia': 'pp',
+  'pp inj': 'pp',
+  'pp injection': 'pp',
+  'hdpe blow': 'hdpe',
+  'hdpe film': 'hdpe',
+  'lldpe film': 'lldpe',
+  'lldpe': 'lldpe',
 };
 
 export async function fetchPolymerPrices(): Promise<PolymerScrapeRow[]> {

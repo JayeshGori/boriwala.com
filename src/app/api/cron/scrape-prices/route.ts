@@ -52,22 +52,25 @@ export async function GET(req: NextRequest) {
   }
 
   // --- JUTE ---
+  // Updates only the generic "Jute" mandi row with the latest TD-5/TD-6 avg.
+  // MSP rows (containing "MSP" in name) are never auto-updated — those are govt-set.
   const juteRows = await fetchJutePrices();
   report.jute.fetched = juteRows.length;
-  for (const row of juteRows) {
-    // Match by variety contained in our `grade` or `name`
-    const doc = all.find(
-      (d) =>
-        d.category === 'jute' &&
-        (d.grade?.toLowerCase() === row.variety.toLowerCase() ||
-          d.name.toLowerCase().includes(row.variety.toLowerCase()))
-    );
-    if (!doc) continue;
-    const upd = applyUpdate(doc, row.modalPriceQtl);
-    if (upd) {
-      Object.assign(doc, upd);
-      await doc.save();
-      report.jute.updated++;
+  if (juteRows.length > 0) {
+    const prices = juteRows.map((r) => r.modalPriceQtl).filter((p) => p > 0);
+    if (prices.length > 0) {
+      const avg = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
+      const mandiDoc = all.find(
+        (d) => d.category === 'jute' && !d.name.toLowerCase().includes('msp')
+      );
+      if (mandiDoc) {
+        const upd = applyUpdate(mandiDoc, avg);
+        if (upd) {
+          Object.assign(mandiDoc, upd);
+          await mandiDoc.save();
+          report.jute.updated++;
+        }
+      }
     }
   }
 
