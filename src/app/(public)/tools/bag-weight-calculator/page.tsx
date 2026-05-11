@@ -55,6 +55,7 @@ export default function BagWeightCalculatorPage() {
   const [bottomFold, setBottomFold] = useState<number>(1);
   const [topHem, setTopHem] = useState<boolean>(false);
   const [topHemSize, setTopHemSize] = useState<number>(1);
+  const [threadG, setThreadG] = useState<number>(2);
   const [quantity, setQuantity] = useState<number>(1000);
 
   // --- GSM mode inputs ---
@@ -66,32 +67,40 @@ export default function BagWeightCalculatorPage() {
   // --- Industry calc ---
   const industryResult = useMemo(() => {
     const cutLen = lengthIn + bottomFold + (topHem ? topHemSize : 0);
-    const perBag = (widthIn * fabricGram * cutLen) / INCH_PER_METER;
+    const fabricOnly = (widthIn * fabricGram * cutLen) / INCH_PER_METER;
+    const thread = Math.max(0, threadG);
+    const perBag = fabricOnly + thread;
     const total = (perBag * quantity) / 1000;
     const equivGsm = fabricGram * INCH_PER_METER;
     return {
       cuttingLength: cutLen,
+      fabricOnlyG: +fabricOnly.toFixed(2),
+      threadG: thread,
       perBagG: +perBag.toFixed(2),
       perBagKg: +(perBag / 1000).toFixed(4),
       totalKg: +total.toFixed(2),
       equivGsm: +equivGsm.toFixed(1),
     };
-  }, [widthIn, lengthIn, fabricGram, bottomFold, topHem, topHemSize, quantity]);
+  }, [widthIn, lengthIn, fabricGram, bottomFold, topHem, topHemSize, threadG, quantity]);
 
   // --- GSM mode calc (flat tubular: front + back) ---
   const gsmResult = useMemo(() => {
     const areaCm2 = 2 * widthCm * lengthCm; // tubular = both panels
     const areaWithSeam = areaCm2 * (1 + Math.max(0, seamPct) / 100);
     const areaM2 = areaWithSeam / 10000;
-    const perBag = areaM2 * Math.max(0, gsm);
+    const fabricOnly = areaM2 * Math.max(0, gsm);
+    const thread = Math.max(0, threadG);
+    const perBag = fabricOnly + thread;
     const total = (perBag * quantity) / 1000;
     return {
       areaM2: +areaM2.toFixed(4),
+      fabricOnlyG: +fabricOnly.toFixed(2),
+      threadG: thread,
       perBagG: +perBag.toFixed(2),
       perBagKg: +(perBag / 1000).toFixed(4),
       totalKg: +total.toFixed(2),
     };
-  }, [widthCm, lengthCm, gsm, seamPct, quantity]);
+  }, [widthCm, lengthCm, gsm, seamPct, threadG, quantity]);
 
   const applyPreset = (p: Preset) => {
     setWidthIn(p.widthIn);
@@ -108,6 +117,7 @@ export default function BagWeightCalculatorPage() {
     setBottomFold(1);
     setTopHem(false);
     setTopHemSize(1);
+    setThreadG(2);
     setQuantity(1000);
   };
 
@@ -116,6 +126,7 @@ export default function BagWeightCalculatorPage() {
     setLengthCm(90);
     setGsm(118);
     setSeamPct(5);
+    setThreadG(2);
     setQuantity(1000);
   };
 
@@ -129,7 +140,7 @@ export default function BagWeightCalculatorPage() {
         `• Bottom fold: ${bottomFold}"` + (topHem ? ` | Top hem: ${topHemSize}"` : '') + `\n`
       : `• Size: ${widthCm} × ${lengthCm} cm\n` +
         `• Fabric: ${gsm} GSM (tubular)\n`) +
-    `• Weight: ${r.perBagG} g/bag\n` +
+    `• Weight: ${r.perBagG} g/bag (fabric ${r.fabricOnlyG}g + thread ${r.threadG}g)\n` +
     `• Quantity: ${quantity.toLocaleString('en-IN')} pcs\n` +
     `• Total: ${r.totalKg.toLocaleString('en-IN')} kg\n` +
     `\nPlease share your best price.`;
@@ -265,6 +276,15 @@ export default function BagWeightCalculatorPage() {
                       </div>
                     </label>
                   </div>
+                  <NumberField
+                    label='Stitching Thread (g)'
+                    value={threadG}
+                    onChange={setThreadG}
+                    min={0}
+                    max={20}
+                    step={0.5}
+                    help="Typical: 2 g per bag"
+                  />
                   <NumberField label='Quantity (bags)' value={quantity} onChange={setQuantity} min={1} step={100} />
                 </div>
 
@@ -277,7 +297,8 @@ export default function BagWeightCalculatorPage() {
                     <div>1. Cutting length = {lengthIn} + {bottomFold}{topHem ? ` + ${topHemSize}` : ''} = <strong>{industryResult.cuttingLength}"</strong></div>
                     <div>2. {widthIn} × {fabricGram} = <strong>{(widthIn * fabricGram).toFixed(2)}</strong></div>
                     <div>3. {(widthIn * fabricGram).toFixed(2)} ÷ 39.37 = <strong>{((widthIn * fabricGram) / INCH_PER_METER).toFixed(4)} g/inch</strong></div>
-                    <div>4. {((widthIn * fabricGram) / INCH_PER_METER).toFixed(4)} × {industryResult.cuttingLength} = <strong className="text-amber-700">{industryResult.perBagG} g per bag</strong></div>
+                    <div>4. {((widthIn * fabricGram) / INCH_PER_METER).toFixed(4)} × {industryResult.cuttingLength} = <strong>{industryResult.fabricOnlyG} g fabric</strong></div>
+                    <div>5. {industryResult.fabricOnlyG} + {industryResult.threadG} (thread) = <strong className="text-amber-700">{industryResult.perBagG} g per bag</strong></div>
                   </div>
                 </div>
               </>
@@ -288,6 +309,15 @@ export default function BagWeightCalculatorPage() {
                   <NumberField label='Length (cm)' value={lengthCm} onChange={setLengthCm} min={1} max={300} />
                   <NumberField label='Fabric GSM'  value={gsm}      onChange={setGsm}      min={20} max={300} help="Grams per m²" />
                   <NumberField label='Seam Allowance (%)' value={seamPct} onChange={setSeamPct} min={0} max={20} help="Stitching extra" />
+                  <NumberField
+                    label='Stitching Thread (g)'
+                    value={threadG}
+                    onChange={setThreadG}
+                    min={0}
+                    max={20}
+                    step={0.5}
+                    help="Typical: 2 g per bag"
+                  />
                   <NumberField label='Quantity (bags)' value={quantity} onChange={setQuantity} min={1} step={100} />
                 </div>
                 <div className="flex gap-2 text-xs text-slate-600 bg-slate-50 border border-slate-200 rounded-lg p-3">
@@ -326,6 +356,8 @@ export default function BagWeightCalculatorPage() {
                 ) : (
                   <Row label="Fabric area / bag" value={`${gsmResult.areaM2} m²`} />
                 )}
+                <Row label="Fabric weight" value={`${r.fabricOnlyG} g`} />
+                <Row label="Stitching thread" value={`+ ${r.threadG} g`} />
                 <Row label="Total bags" value={quantity.toLocaleString('en-IN')} />
                 <Row
                   label="Total weight"
