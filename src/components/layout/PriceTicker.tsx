@@ -75,7 +75,7 @@ export default function PriceTicker() {
                   <span className="font-semibold">{p.name}</span>
                   {p.grade && <span className="text-blue-200/80">[{p.grade}]</span>}
                   <span className="font-bold tabular-nums">
-                    {p.unit.replace('₹/', '₹')}{p.price.toLocaleString('en-IN')}
+                    ₹{p.price.toLocaleString('en-IN')}{p.unit.replace('₹', '')}
                   </span>
                   <span className={`inline-flex items-center gap-0.5 font-semibold ${trendColor}`}>
                     <TrendIcon size={11} />
