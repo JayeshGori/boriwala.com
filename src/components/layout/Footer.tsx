@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { FiPhone, FiMail, FiMapPin } from 'react-icons/fi';
 import Logo from './Logo';
+import { WHATSAPP_NUMBER, PHONE_NUMBER, PHONE_DISPLAY } from '@/lib/contact';
 import { FaWhatsapp, FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube } from 'react-icons/fa';
 
 const productLinks = [
@@ -80,10 +81,10 @@ export default function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-4">Contact Us</h3>
             <div className="space-y-3">
-              <a href="tel:+917405337635" className="flex items-start gap-2 text-sm text-slate-400 hover:text-amber-400 transition-colors">
+              <a href={`tel:${PHONE_NUMBER}`} className="flex items-start gap-2 text-sm text-slate-400 hover:text-amber-400 transition-colors">
                 <FiPhone size={16} />
                 <div>
-                  <p className="font-semibold">+91 74053 37635</p>
+                  <p className="font-semibold">{PHONE_DISPLAY}</p>
                 </div>
               </a>
               <a href="mailto:info@boriwala.com" className="flex items-start gap-2 text-sm text-slate-400 hover:text-amber-400 transition-colors">
@@ -95,7 +96,7 @@ export default function Footer() {
                 Mumbai, Maharashtra, India
               </div>
               <a
-                href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '917405337635'}`}
+                href={`https://wa.me/${WHATSAPP_NUMBER}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-start gap-2 text-sm text-slate-400 hover:text-amber-400 transition-colors"

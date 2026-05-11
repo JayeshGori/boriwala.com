@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { FaWhatsapp } from 'react-icons/fa';
 import { FiArrowRight } from 'react-icons/fi';
+import { whatsappLink } from '@/lib/contact';
 
 export default function HeroBanner() {
   return (
@@ -40,7 +41,7 @@ export default function HeroBanner() {
               <FiArrowRight />
             </Link>
             <a
-              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '917405337635'}`}
+              href={whatsappLink()}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors text-base"

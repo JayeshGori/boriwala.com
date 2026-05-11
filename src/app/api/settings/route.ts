@@ -9,10 +9,10 @@ async function getOrCreateSettings() {
     const created = await Settings.create({
       companyName: 'Boriwala Trading Co.',
       tagline: 'Your Trusted B2B Trading Partner',
-      phone: ['+91 99999 99999'],
+      phone: ['+91 74053 37635'],
       email: ['info@boriwala.com'],
       address: 'Mumbai, Maharashtra, India',
-      whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '919999999999',
+      whatsappNumber: '917405337635',
       aboutUs: 'We are a leading B2B trading company specializing in PP Bags, Jute Bags, Plastic Products, Industrial Packaging Materials and more. With over 15 years of experience, we serve businesses across India with quality products and competitive pricing.',
       aboutUsShort: 'Leading B2B trading company dealing in PP Bags, Jute Bags, Plastic Products & Industrial Packaging Materials.',
       experience: '15+ Years',

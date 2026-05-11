@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FiCheckCircle, FiUpload, FiLink, FiPlus, FiX, FiPhone, FiArrowRight, FiPackage, FiTruck, FiDollarSign, FiShield } from 'react-icons/fi';
+import { whatsappLink, PHONE_NUMBER, PHONE_DISPLAY } from '@/lib/contact';
 
 const MATERIAL_TYPES = [
   { value: 'jute_bags', label: 'Jute Bags', emoji: '🧶' },
@@ -245,17 +246,17 @@ export default function SellToUsPage() {
                 <p className="text-green-100 mb-6">Prefer to talk directly? Reach us via phone or WhatsApp for an instant quote.</p>
                 <div className="space-y-3">
                   <a
-                    href="tel:+917405337635"
+                    href={`tel:${PHONE_NUMBER}`}
                     className="flex items-center gap-3 p-4 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"
                   >
                     <FiPhone size={16} />
                     <div>
                       <p className="text-sm text-green-200">Call Us</p>
-                      <p className="font-semibold">+91 74053 37635</p>
+                      <p className="font-semibold">{PHONE_DISPLAY}</p>
                     </div>
                   </a>
                   <a
-                    href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '917405337635'}?text=Hi, I want to sell used bags/materials. Please contact me.`}
+                    href={whatsappLink('Hi, I want to sell used bags/materials. Please contact me.')}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 p-4 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"

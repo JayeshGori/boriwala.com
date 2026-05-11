@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { FiPhone, FiMail, FiMapPin, FiClock } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import EnquiryForm from '@/components/forms/EnquiryForm';
+import { whatsappLink, PHONE_DISPLAY } from '@/lib/contact';
 
 export const metadata: Metadata = {
   title: 'Contact Us',
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const contactInfo = [
-  { icon: FiPhone, label: 'Phone', values: ['+91 74053 37635'], type: 'tel' },
+  { icon: FiPhone, label: 'Phone', values: [PHONE_DISPLAY], type: 'tel' },
   { icon: FiMail, label: 'Email', values: ['info@boriwala.com', 'sales@boriwala.com'], type: 'email' },
   { icon: FiMapPin, label: 'Address', values: ['123, Industrial Area, Dharavi', 'Mumbai - 400017, Maharashtra, India'], type: 'text' },
   { icon: FiClock, label: 'Business Hours', values: ['Mon - Sat: 9:00 AM - 7:00 PM', 'Sunday: Closed'], type: 'text' },
@@ -56,7 +57,7 @@ export default function ContactPage() {
               </div>
 
               <a
-                href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '917405337635'}`}
+                href={whatsappLink()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 mt-6 w-full px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors"

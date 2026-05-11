@@ -10,6 +10,7 @@ import ProductCard from '@/components/products/ProductCard';
 import { IProduct } from '@/types';
 import { formatPrice, getWhatsAppLink } from '@/lib/utils';
 import { useBuyerAuth } from '@/context/BuyerAuthContext';
+import { WHATSAPP_NUMBER } from '@/lib/contact';
 
 const conditionLabels: Record<string, { label: string; bg: string }> = {
   new: { label: 'NEW', bg: 'bg-emerald-500' },
@@ -84,7 +85,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const categorySlug = catObj?.slug || '';
   const subObj = typeof product.subcategory === 'object' && product.subcategory ? product.subcategory as { name: string; slug?: string } : null;
 
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '917405337635';
+  const whatsappNumber = WHATSAPP_NUMBER;
   const whatsappMsg = `Hi, I'm interested in: *${product.name}*\n\nPlease share pricing and availability details.\n\nThank you.`;
 
   const cond = conditionLabels[product.condition] || conditionLabels.new;

@@ -6,6 +6,7 @@ import { FiMenu, FiX, FiPhone, FiMail, FiUser, FiLogIn, FiLogOut, FiChevronDown 
 import { FaWhatsapp } from 'react-icons/fa';
 import { useBuyerAuth } from '@/context/BuyerAuthContext';
 import Logo from './Logo';
+import { WHATSAPP_NUMBER, PHONE_NUMBER, PHONE_DISPLAY } from '@/lib/contact';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -42,9 +43,9 @@ export default function Header() {
       <div className="bg-slate-800 text-white text-sm">
         <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <a href="tel:+917405337635" className="flex items-center gap-1 hover:text-amber-400 transition-colors">
+            <a href={`tel:${PHONE_NUMBER}`} className="flex items-center gap-1 hover:text-amber-400 transition-colors">
               <FiPhone size={13} />
-              <span className="hidden sm:inline">+91 74053 37635</span>
+              <span className="hidden sm:inline">{PHONE_DISPLAY}</span>
             </a>
             <a href="mailto:info@boriwala.com" className="flex items-center gap-1 hover:text-amber-400 transition-colors">
               <FiMail size={13} />
@@ -53,7 +54,7 @@ export default function Header() {
           </div>
           <div className="flex items-center gap-4">
             <a
-              href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '917405337635'}`}
+              href={`https://wa.me/${WHATSAPP_NUMBER}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 hover:text-green-400 transition-colors"

@@ -301,10 +301,10 @@ export async function POST() {
       await Settings.create({
         companyName: 'Boriwala Trading Co.',
         tagline: 'Your Trusted B2B Trading Partner',
-        phone: ['+91 99999 99999', '+91 88888 88888'],
+        phone: ['+91 74053 37635'],
         email: ['info@boriwala.com', 'sales@boriwala.com'],
         address: '123, Industrial Area, Dharavi, Mumbai - 400017, Maharashtra, India',
-        whatsappNumber: '919999999999',
+        whatsappNumber: '917405337635',
         aboutUs: 'Boriwala Trading Co. is a leading B2B trading company with over 15 years of experience in the packaging industry. We specialize in PP Bags, BOPP Bags, Jute Bags, Cement Bags, PP Granules, Jumbo Bags, Leno Bags, and Industrial Packaging Materials. Our commitment to quality, competitive pricing, and reliable service has made us a trusted partner for businesses across India.',
         aboutUsShort: 'Leading B2B trading company dealing in PP Bags, BOPP Bags, Jute Bags, Cement Bags, PP Granules & Industrial Packaging since 2009.',
         experience: '15+ Years',

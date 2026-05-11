@@ -4,6 +4,7 @@ import { FiMessageSquare, FiLock } from 'react-icons/fi';
 import { IProduct } from '@/types';
 import { formatPrice, getWhatsAppLink } from '@/lib/utils';
 import { useBuyerAuth } from '@/context/BuyerAuthContext';
+import { WHATSAPP_NUMBER } from '@/lib/contact';
 
 interface ProductCardProps {
   product: IProduct;
@@ -24,7 +25,7 @@ const availConfig: Record<string, { label: string; color: string }> = {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { isApproved, buyer } = useBuyerAuth();
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '917405337635';
+  const whatsappNumber = WHATSAPP_NUMBER;
   const whatsappMessage = `Hi, I'm interested in: *${product.name}*\nPlease share pricing and availability details.`;
 
   const categoryName = typeof product.category === 'object' && product.category
