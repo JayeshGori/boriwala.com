@@ -67,6 +67,7 @@ export default function BagWeightCalculatorPage() {
   // --- Yield mode inputs (fabric roll → bags) ---
   const [rollWidthIn, setRollWidthIn] = useState<number>(22);
   const [rollFabricGram, setRollFabricGram] = useState<number>(4.25);
+  const [rollMtrAvg, setRollMtrAvg] = useState<number>(93.5);
   const [rollLengthM, setRollLengthM] = useState<number>(2710);
   const [rollNetKg, setRollNetKg] = useState<number>(251);
   const [yieldBagLenIn, setYieldBagLenIn] = useState<number>(30);
@@ -114,23 +115,24 @@ export default function BagWeightCalculatorPage() {
 
   // --- Yield calc (fabric roll → bags) ---
   const yieldResult = useMemo(() => {
-    const w = Math.max(0, rollWidthIn);
-    const g = Math.max(0, rollFabricGram);
     const lengthM = Math.max(0, rollLengthM);
     const cutLen = yieldBagLenIn + yieldBottomFold + (yieldTopHem ? yieldTopHemSize : 0);
-    const mtrAvg = w * g; // grams per running meter of fabric
+    const mtrAvg = Math.max(0, rollMtrAvg);                 // user-entered (per-roll actual)
+    const computedMtrAvg = Math.max(0, rollWidthIn) * Math.max(0, rollFabricGram); // theoretical
     const calcNetKg = (lengthM * mtrAvg) / 1000;
     const rollLengthIn = lengthM * INCH_PER_METER;
     const bagsCount = cutLen > 0 ? Math.floor(rollLengthIn / cutLen) : 0;
     const usedIn = bagsCount * cutLen;
     const leftoverIn = rollLengthIn - usedIn;
     const utilizationPct = rollLengthIn > 0 ? (usedIn / rollLengthIn) * 100 : 0;
-    const fabricPerBagG = (w * g * cutLen) / INCH_PER_METER;
+    // Per-bag fabric weight uses the actual MTR.AVG (not theoretical width×gram)
+    const fabricPerBagG = (mtrAvg * cutLen) / INCH_PER_METER;
     const thread = Math.max(0, threadG);
     const totalBagWeightKg = (bagsCount * (fabricPerBagG + thread)) / 1000;
     const wastageKg = (leftoverIn * mtrAvg) / INCH_PER_METER / 1000;
     return {
       mtrAvg: +mtrAvg.toFixed(2),
+      computedMtrAvg: +computedMtrAvg.toFixed(2),
       calcNetKg: +calcNetKg.toFixed(2),
       cuttingLength: cutLen,
       bagsCount,
@@ -141,7 +143,7 @@ export default function BagWeightCalculatorPage() {
       wastageKg: +wastageKg.toFixed(3),
       utilizationPct: +utilizationPct.toFixed(2),
     };
-  }, [rollWidthIn, rollFabricGram, rollLengthM, yieldBagLenIn, yieldBottomFold, yieldTopHem, yieldTopHemSize, threadG]);
+  }, [rollWidthIn, rollFabricGram, rollMtrAvg, rollLengthM, yieldBagLenIn, yieldBottomFold, yieldTopHem, yieldTopHemSize, threadG]);
 
   const applyPreset = (p: Preset) => {
     setWidthIn(p.widthIn);
@@ -176,6 +178,7 @@ export default function BagWeightCalculatorPage() {
   const resetYield = () => {
     setRollWidthIn(22);
     setRollFabricGram(4.25);
+    setRollMtrAvg(93.5);
     setRollLengthM(2710);
     setRollNetKg(251);
     setYieldBagLenIn(30);
@@ -409,7 +412,33 @@ export default function BagWeightCalculatorPage() {
                 <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Fabric Roll Details</h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-5">
                   <NumberField label="Fabric Width (inches)" value={rollWidthIn} onChange={setRollWidthIn} min={1} max={120} />
-                  <NumberField label="Fabric Gram" value={rollFabricGram} onChange={setRollFabricGram} min={0.5} max={10} step={0.05} help={`MTR.AVG: ${yieldResult.mtrAvg} g/m`} />
+                  <NumberField label="Fabric Gram" value={rollFabricGram} onChange={setRollFabricGram} min={0.5} max={10} step={0.05} help={`Theoretical: ${yieldResult.computedMtrAvg} g/m`} />
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xs font-semibold text-slate-700 uppercase tracking-wider">MTR.AVG (g/m)</span>
+                      <button
+                        type="button"
+                        onClick={() => setRollMtrAvg(+(rollWidthIn * rollFabricGram).toFixed(2))}
+                        className="text-[10px] font-semibold text-blue-600 hover:text-blue-800 hover:underline"
+                        title="Set to Width × Gram"
+                      >
+                        ↻ Auto
+                      </button>
+                    </div>
+                    <input
+                      type="number"
+                      value={rollMtrAvg}
+                      step={0.1}
+                      min={0}
+                      onChange={(e) => setRollMtrAvg(parseFloat(e.target.value) || 0)}
+                      className="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm tabular-nums focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none transition-colors"
+                    />
+                    {Math.abs(yieldResult.mtrAvg - yieldResult.computedMtrAvg) > 0.5 && (
+                      <p className="text-[10px] text-amber-600 mt-1">
+                        Manual (theoretical {yieldResult.computedMtrAvg})
+                      </p>
+                    )}
+                  </div>
                   <NumberField label="Roll Length (MTR)" value={rollLengthM} onChange={setRollLengthM} min={1} step={10} />
                   <NumberField label="Net Weight (kg)" value={rollNetKg} onChange={setRollNetKg} min={0} step={0.1} help={`Calc: ${yieldResult.calcNetKg} kg`} />
                 </div>
@@ -441,7 +470,7 @@ export default function BagWeightCalculatorPage() {
                 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 text-sm">
                   <div className="text-xs font-bold uppercase tracking-wider text-blue-800 mb-3">Yield Calculation</div>
                   <div className="space-y-1.5 text-slate-700 font-mono text-xs md:text-sm">
-                    <div>1. MTR.AVG = {rollWidthIn} × {rollFabricGram} = <strong>{yieldResult.mtrAvg} g/m</strong></div>
+                    <div>1. MTR.AVG used = <strong>{yieldResult.mtrAvg} g/m</strong> <span className="text-slate-500">(theoretical {rollWidthIn} × {rollFabricGram} = {yieldResult.computedMtrAvg})</span></div>
                     <div>2. Calc Net Wt = {rollLengthM} × {yieldResult.mtrAvg} ÷ 1000 = <strong>{yieldResult.calcNetKg} kg</strong> {Math.abs(yieldResult.calcNetKg - rollNetKg) > rollNetKg * 0.05 && <span className="text-amber-600">(differs &gt;5% from entered {rollNetKg} kg)</span>}</div>
                     <div>3. Cutting length = {yieldBagLenIn} + {yieldBottomFold}{yieldTopHem ? ` + ${yieldTopHemSize}` : ''} = <strong>{yieldResult.cuttingLength}"</strong></div>
                     <div>4. Roll length in inches = {rollLengthM} × 39.37 = <strong>{(rollLengthM * INCH_PER_METER).toLocaleString('en-IN', { maximumFractionDigits: 0 })}"</strong></div>
