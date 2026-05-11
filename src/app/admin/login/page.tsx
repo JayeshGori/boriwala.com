@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAdmin } from '@/lib/admin-auth';
 import toast from 'react-hot-toast';
+import Logo from '@/components/layout/Logo';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
@@ -33,8 +34,10 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <img src="/logo.svg" alt="Boriwala" className="h-16 w-auto mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-white">Admin Login</h1>
+          <div className="flex justify-center mb-4">
+            <Logo size="lg" variant="light" />
+          </div>
+          <h1 className="text-2xl font-bold text-white mt-4">Admin Login</h1>
           <p className="text-slate-400 text-sm mt-1">Boriwala Trading Co.</p>
         </div>
 

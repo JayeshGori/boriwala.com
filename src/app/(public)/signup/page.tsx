@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FiMail, FiUser, FiPhone, FiBriefcase, FiLock, FiArrowRight, FiArrowLeft, FiCheck, FiShield, FiTrendingUp, FiUsers, FiPackage } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import Logo from '@/components/layout/Logo';
 
 const STEPS = [
   {
@@ -207,9 +208,8 @@ export default function BuyerSignupPage() {
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-amber-500/5 rounded-full translate-y-1/2 -translate-x-1/2" />
 
             <div className="relative z-10">
-              <div className="flex items-center gap-2 mb-8">
-                <img src="/logo.svg" alt="Boriwala" className="h-9 w-auto" />
-                <span className="font-bold text-white text-lg">Boriwala</span>
+              <div className="mb-8">
+                <Logo size="sm" variant="light" showTagline={false} />
               </div>
 
               <div className={`transition-all duration-300 ${animating ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}`}>

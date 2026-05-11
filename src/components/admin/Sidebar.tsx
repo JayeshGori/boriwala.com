@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { FiHome, FiGrid, FiPackage, FiMessageSquare, FiSettings, FiLogOut, FiX, FiUsers, FiBell, FiShoppingBag } from 'react-icons/fi';
 import { useAdmin } from '@/lib/admin-auth';
+import Logo from '@/components/layout/Logo';
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: FiHome },
@@ -36,8 +37,8 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-700">
           <Link href="/admin" className="flex items-center gap-2">
-            <img src="/logo.svg" alt="Boriwala" className="h-8 w-auto" />
-            <span className="font-bold text-lg">Admin</span>
+            <Logo size="sm" variant="light" showTagline={false} />
+            <span className="font-bold text-sm text-slate-400">Admin</span>
           </Link>
           <button onClick={onClose} className="lg:hidden text-slate-400 hover:text-white">
             <FiX size={20} />

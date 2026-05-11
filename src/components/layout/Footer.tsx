@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { FiPhone, FiMail, FiMapPin } from 'react-icons/fi';
+import Logo from './Logo';
 import { FaWhatsapp, FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube } from 'react-icons/fa';
 
 const productLinks = [
@@ -25,14 +26,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company info */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-                B
-              </div>
-              <div>
-                <span className="text-lg font-bold text-white">Boriwala</span>
-                <span className="block text-[10px] text-slate-400 -mt-1 tracking-wider uppercase">Trading Co.</span>
-              </div>
+            <div className="mb-4">
+              <Logo size="md" variant="light" />
             </div>
             <p className="text-sm text-slate-400 mb-4 leading-relaxed">
               Leading B2B trading company dealing in PP Bags, Jute Bags, Plastic Products &amp; Industrial Packaging Materials since 2009.

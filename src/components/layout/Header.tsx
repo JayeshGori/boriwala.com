@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { FiMenu, FiX, FiPhone, FiMail, FiUser, FiLogIn, FiLogOut, FiChevronDown } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { useBuyerAuth } from '@/context/BuyerAuthContext';
+import Logo from './Logo';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -74,8 +75,8 @@ export default function Header() {
       {/* Main nav */}
       <nav className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="flex items-center gap-2">
-            <img src="/logo.svg" alt="Boriwala" className="h-14 w-auto" />
+          <Link href="/" className="flex items-center">
+            <Logo size="md" />
           </Link>
 
           {/* Desktop nav */}

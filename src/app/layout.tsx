@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Poppins, Bebas_Neue } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { BuyerAuthProvider } from "@/context/BuyerAuthContext";
 import "./globals.css";
@@ -7,6 +7,18 @@ import "./globals.css";
 const inter = Inter({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+});
+
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "600", "700", "800", "900"],
+});
+
+const bebasNeue = Bebas_Neue({
+  variable: "--font-bebas",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -45,7 +57,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${inter.variable} ${poppins.variable} ${bebasNeue.variable} antialiased`}>
         <BuyerAuthProvider>
           <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
           {children}
