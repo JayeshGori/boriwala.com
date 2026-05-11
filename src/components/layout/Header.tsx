@@ -6,6 +6,7 @@ import { FiMenu, FiX, FiPhone, FiMail, FiUser, FiLogIn, FiLogOut, FiChevronDown 
 import { FaWhatsapp } from 'react-icons/fa';
 import { useBuyerAuth } from '@/context/BuyerAuthContext';
 import Logo from './Logo';
+import PriceTicker from './PriceTicker';
 import { WHATSAPP_NUMBER, PHONE_NUMBER, PHONE_DISPLAY } from '@/lib/contact';
 
 const navLinks = [
@@ -39,6 +40,8 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-sm">
+      {/* Live price ticker */}
+      <PriceTicker />
       {/* Top bar */}
       <div className="bg-slate-800 text-white text-sm">
         <div className="max-w-7xl mx-auto px-4 py-2 flex justify-between items-center">
