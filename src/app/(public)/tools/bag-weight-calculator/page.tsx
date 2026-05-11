@@ -24,7 +24,7 @@ import { whatsappLink } from '@/lib/contact';
 
 const INCH_PER_METER = 39.37;
 
-type Mode = 'industry' | 'gsm';
+type Mode = 'industry' | 'gsm' | 'yield';
 
 type Preset = {
   label: string;
@@ -64,6 +64,16 @@ export default function BagWeightCalculatorPage() {
   const [gsm, setGsm] = useState<number>(118);
   const [seamPct, setSeamPct] = useState<number>(5);
 
+  // --- Yield mode inputs (fabric roll → bags) ---
+  const [rollWidthIn, setRollWidthIn] = useState<number>(22);
+  const [rollFabricGram, setRollFabricGram] = useState<number>(4.25);
+  const [rollLengthM, setRollLengthM] = useState<number>(2710);
+  const [rollNetKg, setRollNetKg] = useState<number>(251);
+  const [yieldBagLenIn, setYieldBagLenIn] = useState<number>(30);
+  const [yieldBottomFold, setYieldBottomFold] = useState<number>(1);
+  const [yieldTopHem, setYieldTopHem] = useState<boolean>(false);
+  const [yieldTopHemSize, setYieldTopHemSize] = useState<number>(1);
+
   // --- Industry calc ---
   const industryResult = useMemo(() => {
     const cutLen = lengthIn + bottomFold + (topHem ? topHemSize : 0);
@@ -102,6 +112,37 @@ export default function BagWeightCalculatorPage() {
     };
   }, [widthCm, lengthCm, gsm, seamPct, threadG, quantity]);
 
+  // --- Yield calc (fabric roll → bags) ---
+  const yieldResult = useMemo(() => {
+    const w = Math.max(0, rollWidthIn);
+    const g = Math.max(0, rollFabricGram);
+    const lengthM = Math.max(0, rollLengthM);
+    const cutLen = yieldBagLenIn + yieldBottomFold + (yieldTopHem ? yieldTopHemSize : 0);
+    const mtrAvg = w * g; // grams per running meter of fabric
+    const calcNetKg = (lengthM * mtrAvg) / 1000;
+    const rollLengthIn = lengthM * INCH_PER_METER;
+    const bagsCount = cutLen > 0 ? Math.floor(rollLengthIn / cutLen) : 0;
+    const usedIn = bagsCount * cutLen;
+    const leftoverIn = rollLengthIn - usedIn;
+    const utilizationPct = rollLengthIn > 0 ? (usedIn / rollLengthIn) * 100 : 0;
+    const fabricPerBagG = (w * g * cutLen) / INCH_PER_METER;
+    const thread = Math.max(0, threadG);
+    const totalBagWeightKg = (bagsCount * (fabricPerBagG + thread)) / 1000;
+    const wastageKg = (leftoverIn * mtrAvg) / INCH_PER_METER / 1000;
+    return {
+      mtrAvg: +mtrAvg.toFixed(2),
+      calcNetKg: +calcNetKg.toFixed(2),
+      cuttingLength: cutLen,
+      bagsCount,
+      fabricPerBagG: +fabricPerBagG.toFixed(2),
+      perBagWithThreadG: +(fabricPerBagG + thread).toFixed(2),
+      totalBagWeightKg: +totalBagWeightKg.toFixed(2),
+      leftoverM: +(leftoverIn / INCH_PER_METER).toFixed(2),
+      wastageKg: +wastageKg.toFixed(3),
+      utilizationPct: +utilizationPct.toFixed(2),
+    };
+  }, [rollWidthIn, rollFabricGram, rollLengthM, yieldBagLenIn, yieldBottomFold, yieldTopHem, yieldTopHemSize, threadG]);
+
   const applyPreset = (p: Preset) => {
     setWidthIn(p.widthIn);
     setLengthIn(p.lengthIn);
@@ -130,20 +171,41 @@ export default function BagWeightCalculatorPage() {
     setQuantity(1000);
   };
 
-  const r = mode === 'industry' ? industryResult : gsmResult;
+  const r = mode === 'industry' ? industryResult : mode === 'gsm' ? gsmResult : null;
+
+  const resetYield = () => {
+    setRollWidthIn(22);
+    setRollFabricGram(4.25);
+    setRollLengthM(2710);
+    setRollNetKg(251);
+    setYieldBagLenIn(30);
+    setYieldBottomFold(1);
+    setYieldTopHem(false);
+    setYieldTopHemSize(1);
+    setThreadG(2);
+  };
+
+  const resetCurrent = mode === 'industry' ? resetIndustry : mode === 'gsm' ? resetGsm : resetYield;
 
   const enquiryMessage =
-    `Hi, I'd like a quote for woven bags:\n` +
-    (mode === 'industry'
-      ? `• Size: ${widthIn}" × ${lengthIn}" (cutting ${widthIn}" × ${industryResult.cuttingLength}")\n` +
-        `• Fabric: ${fabricGram} gram (~${industryResult.equivGsm} GSM)\n` +
-        `• Bottom fold: ${bottomFold}"` + (topHem ? ` | Top hem: ${topHemSize}"` : '') + `\n`
-      : `• Size: ${widthCm} × ${lengthCm} cm\n` +
-        `• Fabric: ${gsm} GSM (tubular)\n`) +
-    `• Weight: ${r.perBagG} g/bag (fabric ${r.fabricOnlyG}g + thread ${r.threadG}g)\n` +
-    `• Quantity: ${quantity.toLocaleString('en-IN')} pcs\n` +
-    `• Total: ${r.totalKg.toLocaleString('en-IN')} kg\n` +
-    `\nPlease share your best price.`;
+    mode === 'yield'
+      ? `Hi, I have a fabric roll:\n` +
+        `• Size: ${rollWidthIn}" × ${rollFabricGram} gram (~${(rollFabricGram * INCH_PER_METER).toFixed(0)} GSM)\n` +
+        `• Roll: ${rollLengthM} MTR, ${rollNetKg} kg net (MTR.AVG ${yieldResult.mtrAvg} g/m)\n` +
+        `• Target bag: ${rollWidthIn}" × ${yieldBagLenIn}" (cutting ${yieldResult.cuttingLength}")\n` +
+        `• Yield: ${yieldResult.bagsCount.toLocaleString('en-IN')} bags @ ${yieldResult.perBagWithThreadG} g/bag\n` +
+        `\nPlease confirm conversion rate.`
+      : `Hi, I'd like a quote for woven bags:\n` +
+        (mode === 'industry'
+          ? `• Size: ${widthIn}" × ${lengthIn}" (cutting ${widthIn}" × ${industryResult.cuttingLength}")\n` +
+            `• Fabric: ${fabricGram} gram (~${industryResult.equivGsm} GSM)\n` +
+            `• Bottom fold: ${bottomFold}"` + (topHem ? ` | Top hem: ${topHemSize}"` : '') + `\n`
+          : `• Size: ${widthCm} × ${lengthCm} cm\n` +
+            `• Fabric: ${gsm} GSM (tubular)\n`) +
+        `• Weight: ${r!.perBagG} g/bag (fabric ${r!.fabricOnlyG}g + thread ${r!.threadG}g)\n` +
+        `• Quantity: ${quantity.toLocaleString('en-IN')} pcs\n` +
+        `• Total: ${r!.totalKg.toLocaleString('en-IN')} kg\n` +
+        `\nPlease share your best price.`;
 
   return (
     <div className="bg-slate-50 min-h-screen">
@@ -196,6 +258,16 @@ export default function BagWeightCalculatorPage() {
             <FiSettings size={14} />
             Technical (GSM)
           </button>
+          <button
+            onClick={() => setMode('yield')}
+            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold border-2 transition-all ${
+              mode === 'yield'
+                ? 'bg-blue-600 text-white border-blue-600'
+                : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'
+            }`}
+          >
+            Fabric → Bags (Yield)
+          </button>
         </div>
 
         {/* Presets only for industry mode */}
@@ -226,14 +298,14 @@ export default function BagWeightCalculatorPage() {
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-lg font-bold text-slate-800">Bag Specifications</h2>
               <button
-                onClick={mode === 'industry' ? resetIndustry : resetGsm}
+                onClick={resetCurrent}
                 className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800"
               >
                 <FiRotateCcw size={12} /> Reset
               </button>
             </div>
 
-            {mode === 'industry' ? (
+            {mode === 'industry' && (
               <>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-5">
                   <NumberField label='Width (inches)'  value={widthIn}    onChange={setWidthIn}    min={1} max={120} />
@@ -302,7 +374,9 @@ export default function BagWeightCalculatorPage() {
                   </div>
                 </div>
               </>
-            ) : (
+            )}
+
+            {mode === 'gsm' && (
               <>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-5">
                   <NumberField label='Width (cm)'  value={widthCm}  onChange={setWidthCm}  min={1} max={300} />
@@ -329,42 +403,110 @@ export default function BagWeightCalculatorPage() {
                 </div>
               </>
             )}
+
+            {mode === 'yield' && (
+              <>
+                <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Fabric Roll Details</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-5">
+                  <NumberField label="Fabric Width (inches)" value={rollWidthIn} onChange={setRollWidthIn} min={1} max={120} />
+                  <NumberField label="Fabric Gram" value={rollFabricGram} onChange={setRollFabricGram} min={0.5} max={10} step={0.05} help={`MTR.AVG: ${yieldResult.mtrAvg} g/m`} />
+                  <NumberField label="Roll Length (MTR)" value={rollLengthM} onChange={setRollLengthM} min={1} step={10} />
+                  <NumberField label="Net Weight (kg)" value={rollNetKg} onChange={setRollNetKg} min={0} step={0.1} help={`Calc: ${yieldResult.calcNetKg} kg`} />
+                </div>
+
+                <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2 mt-2">Bag Spec</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-5">
+                  <NumberField label="Bag Length (inches)" value={yieldBagLenIn} onChange={setYieldBagLenIn} min={1} max={120} help="Finished length" />
+                  <NumberField label="Bottom Fold (inches)" value={yieldBottomFold} onChange={setYieldBottomFold} min={0} max={5} step={0.5} />
+                  <div>
+                    <label className="block">
+                      <span className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Top Hemming</span>
+                      <div className="flex items-center gap-2">
+                        <label className="inline-flex items-center gap-2 px-3 py-2.5 border border-slate-300 rounded-lg cursor-pointer text-sm">
+                          <input type="checkbox" checked={yieldTopHem} onChange={(e) => setYieldTopHem(e.target.checked)} />
+                          <span>{yieldTopHem ? 'Yes' : 'No'}</span>
+                        </label>
+                        {yieldTopHem && (
+                          <input type="number" value={yieldTopHemSize} min={0} max={5} step={0.5}
+                            onChange={(e) => setYieldTopHemSize(parseFloat(e.target.value) || 0)}
+                            className="w-20 px-2 py-2.5 border border-slate-300 rounded-lg text-sm tabular-nums" />
+                        )}
+                      </div>
+                    </label>
+                  </div>
+                  <NumberField label="Stitching Thread (g)" value={threadG} onChange={setThreadG} min={0} max={20} step={0.5} help="Typical: 2 g per bag" />
+                </div>
+
+                {/* Step-by-step */}
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 text-sm">
+                  <div className="text-xs font-bold uppercase tracking-wider text-blue-800 mb-3">Yield Calculation</div>
+                  <div className="space-y-1.5 text-slate-700 font-mono text-xs md:text-sm">
+                    <div>1. MTR.AVG = {rollWidthIn} × {rollFabricGram} = <strong>{yieldResult.mtrAvg} g/m</strong></div>
+                    <div>2. Calc Net Wt = {rollLengthM} × {yieldResult.mtrAvg} ÷ 1000 = <strong>{yieldResult.calcNetKg} kg</strong> {Math.abs(yieldResult.calcNetKg - rollNetKg) > rollNetKg * 0.05 && <span className="text-amber-600">(differs &gt;5% from entered {rollNetKg} kg)</span>}</div>
+                    <div>3. Cutting length = {yieldBagLenIn} + {yieldBottomFold}{yieldTopHem ? ` + ${yieldTopHemSize}` : ''} = <strong>{yieldResult.cuttingLength}"</strong></div>
+                    <div>4. Roll length in inches = {rollLengthM} × 39.37 = <strong>{(rollLengthM * INCH_PER_METER).toLocaleString('en-IN', { maximumFractionDigits: 0 })}"</strong></div>
+                    <div>5. Bags = floor({(rollLengthM * INCH_PER_METER).toLocaleString('en-IN', { maximumFractionDigits: 0 })} ÷ {yieldResult.cuttingLength}) = <strong className="text-blue-700">{yieldResult.bagsCount.toLocaleString('en-IN')} bags</strong></div>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Result panel */}
           <div className="lg:col-span-1">
             <div className="bg-gradient-to-br from-[#1a73e8] via-[#0d3a8f] to-slate-900 text-white rounded-2xl p-6 md:p-7 sticky top-32 shadow-xl">
               <h2 className="text-xs font-bold uppercase tracking-widest text-blue-200 mb-1">Result</h2>
-              <p className="text-blue-100/70 text-xs mb-5">Per bag</p>
+              <p className="text-blue-100/70 text-xs mb-5">{mode === 'yield' ? 'From this roll' : 'Per bag'}</p>
 
-              <div className="mb-6">
-                <div className="text-5xl font-extrabold tabular-nums">
-                  {r.perBagG.toLocaleString('en-IN')}
-                  <span className="text-2xl text-blue-200 ml-1">g</span>
-                </div>
-                <div className="text-sm text-blue-200 mt-1">
-                  ≈ {r.perBagKg.toLocaleString('en-IN')} kg per bag
-                </div>
-              </div>
+              {mode !== 'yield' && r && (
+                <>
+                  <div className="mb-6">
+                    <div className="text-5xl font-extrabold tabular-nums">
+                      {r.perBagG.toLocaleString('en-IN')}
+                      <span className="text-2xl text-blue-200 ml-1">g</span>
+                    </div>
+                    <div className="text-sm text-blue-200 mt-1">
+                      ≈ {r.perBagKg.toLocaleString('en-IN')} kg per bag
+                    </div>
+                  </div>
 
-              <div className="space-y-3 border-t border-white/15 pt-5">
-                {mode === 'industry' ? (
-                  <>
-                    <Row label="Cutting size" value={`${widthIn}" × ${industryResult.cuttingLength}"`} />
-                    <Row label="Equivalent GSM" value={`${industryResult.equivGsm} g/m²`} />
-                  </>
-                ) : (
-                  <Row label="Fabric area / bag" value={`${gsmResult.areaM2} m²`} />
-                )}
-                <Row label="Fabric weight" value={`${r.fabricOnlyG} g`} />
-                <Row label="Stitching thread" value={`+ ${r.threadG} g`} />
-                <Row label="Total bags" value={quantity.toLocaleString('en-IN')} />
-                <Row
-                  label="Total weight"
-                  value={`${r.totalKg.toLocaleString('en-IN')} kg`}
-                  highlight
-                />
-              </div>
+                  <div className="space-y-3 border-t border-white/15 pt-5">
+                    {mode === 'industry' ? (
+                      <>
+                        <Row label="Cutting size" value={`${widthIn}" × ${industryResult.cuttingLength}"`} />
+                        <Row label="Equivalent GSM" value={`${industryResult.equivGsm} g/m²`} />
+                      </>
+                    ) : (
+                      <Row label="Fabric area / bag" value={`${gsmResult.areaM2} m²`} />
+                    )}
+                    <Row label="Fabric weight" value={`${r.fabricOnlyG} g`} />
+                    <Row label="Stitching thread" value={`+ ${r.threadG} g`} />
+                    <Row label="Total bags" value={quantity.toLocaleString('en-IN')} />
+                    <Row label="Total weight" value={`${r.totalKg.toLocaleString('en-IN')} kg`} highlight />
+                  </div>
+                </>
+              )}
+
+              {mode === 'yield' && (
+                <>
+                  <div className="mb-6">
+                    <div className="text-5xl font-extrabold tabular-nums">
+                      {yieldResult.bagsCount.toLocaleString('en-IN')}
+                    </div>
+                    <div className="text-sm text-blue-200 mt-1">bags can be made</div>
+                  </div>
+
+                  <div className="space-y-3 border-t border-white/15 pt-5">
+                    <Row label="MTR.AVG" value={`${yieldResult.mtrAvg} g/m`} />
+                    <Row label="Calculated net wt" value={`${yieldResult.calcNetKg} kg`} />
+                    <Row label="Cutting length" value={`${yieldResult.cuttingLength}"`} />
+                    <Row label="Per bag (with thread)" value={`${yieldResult.perBagWithThreadG} g`} />
+                    <Row label="Fabric utilization" value={`${yieldResult.utilizationPct}%`} />
+                    <Row label="Leftover / wastage" value={`${yieldResult.leftoverM} m (${yieldResult.wastageKg} kg)`} />
+                    <Row label="Total bag weight" value={`${yieldResult.totalBagWeightKg.toLocaleString('en-IN')} kg`} highlight />
+                  </div>
+                </>
+              )}
 
               <div className="mt-6 space-y-2">
                 <a
