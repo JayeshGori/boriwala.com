@@ -13,6 +13,7 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/products', label: 'Products' },
   { href: '/categories', label: 'Categories' },
+  { href: '/tools/bag-weight-calculator', label: 'Bag Calculator' },
   { href: '/about', label: 'About Us' },
   { href: '/contact', label: 'Contact' },
 ];
