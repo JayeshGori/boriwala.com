@@ -1,5 +1,13 @@
 import mongoose, { Schema, Model } from 'mongoose';
 
+export type PriceUnit = 'piece' | 'kg' | 'set' | 'meter' | 'roll' | 'bag' | 'dozen' | 'box';
+export type DispatchStatus = 'ready_stock' | 'in_production';
+
+export interface IProductVariantGroup {
+  name: string;        // e.g. 'Quality', 'Size', 'Color'
+  values: string[];    // e.g. ['Gold', 'Silver', 'Semi Silver', 'Janta']
+}
+
 export interface IProductDoc {
   name: string;
   slug: string;
@@ -12,6 +20,22 @@ export interface IProductDoc {
   condition: 'new' | 'old' | 'rejected';
   price?: number;
   showPrice: boolean;
+  // --- Phase 1: advanced pricing
+  priceUnit: PriceUnit;
+  gstIncluded: boolean;
+  gstRate: number;
+  // --- Phase 1: dispatch
+  dispatchStatus: DispatchStatus;
+  dispatchDays?: number;          // override default days
+  stockPincode?: string;          // origin pincode for transport calc (Phase 3)
+  // --- Phase 1: additional spec fields
+  gsm?: string;
+  thickness?: string;
+  weight?: string;
+  capacity?: string;
+  // --- Phase 1: simple variants
+  variants: IProductVariantGroup[];
+  // existing fields
   specifications: { key: string; value: string }[];
   filterAttributes: Record<string, string>;
   moq: string;
@@ -38,6 +62,33 @@ const ProductSchema = new Schema<IProductDoc>(
     condition: { type: String, enum: ['new', 'old', 'rejected'], default: 'new' },
     price: { type: Number, default: null },
     showPrice: { type: Boolean, default: false },
+    priceUnit: {
+      type: String,
+      enum: ['piece', 'kg', 'set', 'meter', 'roll', 'bag', 'dozen', 'box'],
+      default: 'piece',
+    },
+    gstIncluded: { type: Boolean, default: false },
+    gstRate: { type: Number, default: 18 },
+    dispatchStatus: {
+      type: String,
+      enum: ['ready_stock', 'in_production'],
+      default: 'ready_stock',
+    },
+    dispatchDays: { type: Number, default: null },
+    stockPincode: { type: String, default: '' },
+    gsm: { type: String, default: '' },
+    thickness: { type: String, default: '' },
+    weight: { type: String, default: '' },
+    capacity: { type: String, default: '' },
+    variants: {
+      type: [
+        {
+          name: { type: String, required: true },
+          values: [{ type: String }],
+        },
+      ],
+      default: [],
+    },
     specifications: [
       {
         key: { type: String, required: true },

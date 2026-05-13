@@ -3,6 +3,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { FiMessageSquare, FiLock } from 'react-icons/fi';
 import { IProduct } from '@/types';
 import { formatPrice, getWhatsAppLink } from '@/lib/utils';
+import { priceUnitLabel } from '@/lib/pricing';
 import { useBuyerAuth } from '@/context/BuyerAuthContext';
 import { WHATSAPP_NUMBER } from '@/lib/contact';
 
@@ -97,7 +98,15 @@ export default function ProductCard({ product }: ProductCardProps) {
             <div>
               {product.showPrice && product.price ? (
                 canSeePrice ? (
-                  <span className="text-base font-bold text-slate-800">{formatPrice(product.price)}</span>
+                  <div className="flex flex-col">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-base font-bold text-slate-800">{formatPrice(product.price)}</span>
+                      <span className="text-[11px] font-medium text-slate-500">{priceUnitLabel(product.priceUnit)}</span>
+                    </div>
+                    <span className="text-[10px] font-semibold text-slate-500">
+                      {product.gstIncluded ? `incl. ${product.gstRate ?? 18}% GST` : `+ ${product.gstRate ?? 18}% GST`}
+                    </span>
+                  </div>
                 ) : (
                   <Link href={buyer ? '#' : '/login'} className="flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-amber-600">
                     <FiLock size={12} />

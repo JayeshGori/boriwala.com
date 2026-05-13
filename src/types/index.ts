@@ -18,6 +18,14 @@ export interface ISpecification {
   value: string;
 }
 
+export type PriceUnit = 'piece' | 'kg' | 'set' | 'meter' | 'roll' | 'bag' | 'dozen' | 'box';
+export type DispatchStatus = 'ready_stock' | 'in_production';
+
+export interface IProductVariantGroup {
+  name: string;
+  values: string[];
+}
+
 export interface IProduct {
   _id: string;
   name: string;
@@ -31,6 +39,17 @@ export interface IProduct {
   condition: 'new' | 'old' | 'rejected';
   price?: number;
   showPrice: boolean;
+  priceUnit?: PriceUnit;
+  gstIncluded?: boolean;
+  gstRate?: number;
+  dispatchStatus?: DispatchStatus;
+  dispatchDays?: number;
+  stockPincode?: string;
+  gsm?: string;
+  thickness?: string;
+  weight?: string;
+  capacity?: string;
+  variants?: IProductVariantGroup[];
   specifications: ISpecification[];
   filterAttributes: Record<string, string>;
   moq: string;

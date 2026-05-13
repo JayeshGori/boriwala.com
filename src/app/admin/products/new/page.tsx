@@ -19,6 +19,8 @@ interface Spec {
   value: string;
 }
 
+interface VariantGroup { name: string; values: string[]; }
+
 const defaultForm = {
   name: '',
   description: '',
@@ -30,6 +32,17 @@ const defaultForm = {
   condition: 'new' as 'new' | 'old' | 'rejected',
   price: '',
   showPrice: false,
+  priceUnit: 'piece' as 'piece' | 'kg' | 'set' | 'meter' | 'roll' | 'bag' | 'dozen' | 'box',
+  gstIncluded: false,
+  gstRate: '18',
+  dispatchStatus: 'ready_stock' as 'ready_stock' | 'in_production',
+  dispatchDays: '',
+  stockPincode: '',
+  gsm: '',
+  thickness: '',
+  weight: '',
+  capacity: '',
+  variants: [] as VariantGroup[],
   specifications: [] as Spec[],
   filterAttributes: {} as Record<string, string>,
   moq: '',
@@ -134,8 +147,11 @@ export default function NewProductPage() {
       const body = {
         ...form,
         price: form.price ? parseFloat(form.price) : null,
+        gstRate: form.gstRate ? parseFloat(form.gstRate) : 18,
+        dispatchDays: form.dispatchDays ? parseInt(form.dispatchDays, 10) : null,
         tags: form.tags.split(',').map((t) => t.trim()).filter(Boolean),
         specifications: form.specifications.filter((s) => s.key && s.value),
+        variants: form.variants.filter((v) => v.name && v.values.length > 0),
         filterAttributes: form.filterAttributes,
         subcategory: form.subcategory || null,
       };
@@ -256,11 +272,38 @@ export default function NewProductPage() {
 
         {/* Pricing */}
         <div className="bg-white rounded-xl border border-slate-200 p-6">
-          <h3 className="text-lg font-semibold text-slate-800 mb-4">Pricing & Order</h3>
+          <h3 className="text-lg font-semibold text-slate-800 mb-4">Pricing &amp; Order</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Price (₹)</label>
               <input type="number" name="price" value={form.price} onChange={handleChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="0.00" step="0.01" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Pricing Unit *</label>
+              <select name="priceUnit" value={form.priceUnit} onChange={handleChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+                <option value="piece">Per Piece</option>
+                <option value="kg">Per KG</option>
+                <option value="set">Per Set</option>
+                <option value="meter">Per Meter</option>
+                <option value="roll">Per Roll</option>
+                <option value="bag">Per Bag</option>
+                <option value="dozen">Per Dozen</option>
+                <option value="box">Per Box</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Minimum Order Qty</label>
+              <input type="text" name="moq" value={form.moq} onChange={handleChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="e.g. 1000 pieces" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">GST Rate (%)</label>
+              <input type="number" name="gstRate" value={form.gstRate} onChange={handleChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none" min="0" max="50" />
+            </div>
+            <div className="flex items-end pb-2">
+              <label className="flex items-center gap-2">
+                <input type="checkbox" name="gstIncluded" checked={form.gstIncluded} onChange={handleChange} className="rounded" />
+                <span className="text-sm font-medium text-slate-700">Price includes GST</span>
+              </label>
             </div>
             <div className="flex items-end pb-2">
               <label className="flex items-center gap-2">
@@ -268,11 +311,119 @@ export default function NewProductPage() {
                 <span className="text-sm font-medium text-slate-700">Show price on website</span>
               </label>
             </div>
+          </div>
+        </div>
+
+        {/* Dispatch & Stock */}
+        <div className="bg-white rounded-xl border border-slate-200 p-6">
+          <h3 className="text-lg font-semibold text-slate-800 mb-4">Dispatch &amp; Stock</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Minimum Order Qty</label>
-              <input type="text" name="moq" value={form.moq} onChange={handleChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="e.g. 1000 pieces" />
+              <label className="block text-sm font-medium text-slate-700 mb-1">Dispatch Status</label>
+              <select name="dispatchStatus" value={form.dispatchStatus} onChange={handleChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+                <option value="ready_stock">Ready Stock (Dispatch in 2 days)</option>
+                <option value="in_production">In Production (1+ week)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Override Dispatch Days</label>
+              <input type="number" name="dispatchDays" value={form.dispatchDays} onChange={handleChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="Optional - leave blank for default" min="1" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Stock Location (Pincode)</label>
+              <input type="text" name="stockPincode" value={form.stockPincode} onChange={handleChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="e.g. 360003" maxLength={6} />
             </div>
           </div>
+        </div>
+
+        {/* Additional attributes */}
+        <div className="bg-white rounded-xl border border-slate-200 p-6">
+          <h3 className="text-lg font-semibold text-slate-800 mb-4">Product Attributes</h3>
+          <p className="text-xs text-slate-400 mb-3">Optional but recommended — these appear as quick-info pills on the product page.</p>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">GSM / Gamage</label>
+              <input type="text" name="gsm" value={form.gsm} onChange={handleChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="e.g. 80 GSM" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Thickness</label>
+              <input type="text" name="thickness" value={form.thickness} onChange={handleChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="e.g. 50 micron" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Weight</label>
+              <input type="text" name="weight" value={form.weight} onChange={handleChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="e.g. 50 kg" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Capacity</label>
+              <input type="text" name="capacity" value={form.capacity} onChange={handleChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="e.g. 50 kg / 100 L" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Size</label>
+              <input type="text" name="size" value={form.size} onChange={handleChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="e.g. 18x32 inch" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">Application</label>
+              <input type="text" name="application" value={form.application} onChange={handleChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none" placeholder="e.g. Cement, Sugar, Food packaging" />
+            </div>
+          </div>
+        </div>
+
+        {/* Variants */}
+        <div className="bg-white rounded-xl border border-slate-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-lg font-semibold text-slate-800">Variants (Optional)</h3>
+              <p className="text-xs text-slate-400">e.g. Quality → Gold, Silver, Semi Silver, Janta &nbsp;·&nbsp; Color → Red, Blue, Green</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setForm({ ...form, variants: [...form.variants, { name: '', values: [] }] })}
+              className="flex items-center gap-1 px-3 py-1.5 text-sm text-amber-600 hover:bg-amber-50 border border-amber-300 rounded-lg"
+            >
+              <FiPlus size={14} /> Add Group
+            </button>
+          </div>
+          {form.variants.length === 0 ? (
+            <p className="text-sm text-slate-400">No variants. Click &quot;Add Group&quot; to add (e.g. Size, Color, Quality).</p>
+          ) : (
+            <div className="space-y-3">
+              {form.variants.map((vg, idx) => (
+                <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                  <div className="flex gap-2 mb-2">
+                    <input
+                      type="text"
+                      value={vg.name}
+                      onChange={(e) => {
+                        const newVars = [...form.variants];
+                        newVars[idx].name = e.target.value;
+                        setForm({ ...form, variants: newVars });
+                      }}
+                      placeholder="Group name (e.g. Quality, Size, Color)"
+                      className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setForm({ ...form, variants: form.variants.filter((_, i) => i !== idx) })}
+                      className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
+                    >
+                      <FiTrash2 size={16} />
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    value={vg.values.join(', ')}
+                    onChange={(e) => {
+                      const newVars = [...form.variants];
+                      newVars[idx].values = e.target.value.split(',').map((v) => v.trim()).filter(Boolean);
+                      setForm({ ...form, variants: newVars });
+                    }}
+                    placeholder="Values (comma separated) - e.g. Gold, Silver, Semi Silver, Janta"
+                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 outline-none"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Filter Attributes (dynamic per category) */}

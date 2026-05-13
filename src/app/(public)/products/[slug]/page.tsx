@@ -6,10 +6,13 @@ import Link from 'next/link';
 import { FaWhatsapp } from 'react-icons/fa';
 import { FiChevronRight, FiCheck, FiX, FiClock, FiTruck } from 'react-icons/fi';
 import EnquiryForm from '@/components/forms/EnquiryForm';
-import ProductCard from '@/components/products/ProductCard';
 import ProductVideoPlayer from '@/components/products/ProductVideoPlayer';
+import PriceDisplay from '@/components/products/PriceDisplay';
+import DispatchBadge from '@/components/products/DispatchBadge';
+import PurchaseFlow from '@/components/products/PurchaseFlow';
+import RelatedProductsSection from '@/components/products/RelatedProductsSection';
 import { IProduct } from '@/types';
-import { formatPrice, getWhatsAppLink } from '@/lib/utils';
+import { getWhatsAppLink } from '@/lib/utils';
 import { useBuyerAuth } from '@/context/BuyerAuthContext';
 import { WHATSAPP_NUMBER } from '@/lib/contact';
 
@@ -23,10 +26,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const { slug } = use(params);
   const searchParams = useSearchParams();
   const [product, setProduct] = useState<IProduct | null>(null);
-  const [related, setRelated] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(0);
   const [showEnquiry, setShowEnquiry] = useState(searchParams.get('enquiry') === 'true');
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
   const { isApproved, buyer } = useBuyerAuth();
   const canSeePrice = isApproved;
 
@@ -34,19 +37,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
     fetch(`/api/products/${slug}`)
       .then((r) => r.json())
       .then((d) => {
-        if (d.success) {
-          setProduct(d.data);
-          const catId = typeof d.data.category === 'object' ? d.data.category._id : d.data.category;
-          if (catId) {
-            fetch(`/api/products?category=${catId}&limit=4`)
-              .then((r) => r.json())
-              .then((rd) => {
-                if (rd.success) {
-                  setRelated(rd.data.filter((p: IProduct) => p._id !== d.data._id).slice(0, 4));
-                }
-              });
-          }
-        }
+        if (d.success) setProduct(d.data);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -178,32 +169,81 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
             )}
             <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mt-1">{product.name}</h1>
 
-            <div className="flex flex-wrap items-center gap-3 mt-4">
-              {product.showPrice && product.price ? (
-                canSeePrice ? (
-                  <span className="text-3xl font-bold text-slate-800">{formatPrice(product.price)}</span>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-semibold text-slate-400 blur-sm select-none" aria-hidden>₹XX,XXX</span>
-                    <Link
-                      href={buyer ? '#' : '/login'}
-                      className="px-3 py-1 bg-slate-100 text-slate-600 text-sm font-medium rounded-lg hover:bg-amber-50 hover:text-amber-700 transition-colors"
-                    >
-                      {buyer ? '⏳ Pending approval' : '🔒 Login to see price'}
-                    </Link>
-                  </div>
-                )
-              ) : (
-                <span className="text-lg font-semibold text-amber-600">Contact for Price</span>
-              )}
-              <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${avail.color}`}>
-                <AvailIcon size={14} />
-                {avail.label}
-              </span>
+            {/* Price card */}
+            <div className="mt-5 p-4 sm:p-5 bg-gradient-to-br from-amber-50/70 to-white border border-amber-200/70 rounded-2xl">
+              <PriceDisplay product={product} canSeePrice={canSeePrice} isBuyer={!!buyer} />
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${avail.color}`}>
+                  <AvailIcon size={14} />
+                  {avail.label}
+                </span>
+                {product.moq && (
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
+                    MOQ: {product.moq}
+                  </span>
+                )}
+              </div>
+              <div className="mt-3">
+                <DispatchBadge status={product.dispatchStatus} days={product.dispatchDays} />
+              </div>
             </div>
 
-            {product.moq && (
-              <p className="text-sm text-slate-500 mt-2">Minimum Order: <span className="font-medium text-slate-700">{product.moq}</span></p>
+            {/* Variants selector */}
+            {product.variants && product.variants.length > 0 && (
+              <div className="mt-6 space-y-4">
+                {product.variants.map((vg) => (
+                  <div key={vg.name}>
+                    <p className="text-sm font-semibold text-slate-700 mb-2">
+                      {vg.name}
+                      {selectedVariants[vg.name] && (
+                        <span className="ml-2 text-slate-500 font-normal">: {selectedVariants[vg.name]}</span>
+                      )}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {vg.values.map((val) => {
+                        const active = selectedVariants[vg.name] === val;
+                        return (
+                          <button
+                            key={val}
+                            type="button"
+                            onClick={() =>
+                              setSelectedVariants((prev) => ({ ...prev, [vg.name]: active ? '' : val }))
+                            }
+                            className={`px-3 py-1.5 text-sm font-medium rounded-lg border transition-all ${
+                              active
+                                ? 'bg-amber-500 border-amber-500 text-white shadow-sm'
+                                : 'bg-white border-slate-300 text-slate-700 hover:border-amber-400 hover:text-amber-700'
+                            }`}
+                          >
+                            {val}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Key product attributes (GSM / Thickness / Weight / Capacity) */}
+            {(product.gsm || product.thickness || product.weight || product.capacity || product.material || product.size) && (
+              <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                {[
+                  { label: 'GSM', value: product.gsm },
+                  { label: 'Thickness', value: product.thickness },
+                  { label: 'Weight', value: product.weight },
+                  { label: 'Capacity', value: product.capacity },
+                  { label: 'Material', value: product.material },
+                  { label: 'Size', value: product.size },
+                ]
+                  .filter((a) => !!a.value)
+                  .map((a) => (
+                    <div key={a.label} className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">{a.label}</p>
+                      <p className="text-sm font-semibold text-slate-800 mt-0.5">{a.value}</p>
+                    </div>
+                  ))}
+              </div>
             )}
 
             {product.description && (
@@ -257,17 +297,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
           </div>
         </div>
 
-        {/* Related products */}
-        {related.length > 0 && (
-          <div className="mt-16">
-            <h2 className="text-2xl font-bold text-slate-800 mb-6">Related Products</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {related.map((p) => (
-                <ProductCard key={p._id} product={p} />
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Purchase flow */}
+        <PurchaseFlow productName={product.name} />
+
+        {/* Related / Featured / New Arrivals with smart fallback */}
+        <RelatedProductsSection
+          productId={product._id}
+          categoryId={typeof product.category === 'object' ? product.category?._id : (product.category as string | undefined)}
+        />
       </div>
     </>
   );
