@@ -7,6 +7,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { FiChevronRight, FiCheck, FiX, FiClock, FiTruck } from 'react-icons/fi';
 import EnquiryForm from '@/components/forms/EnquiryForm';
 import ProductCard from '@/components/products/ProductCard';
+import ProductVideoPlayer from '@/components/products/ProductVideoPlayer';
 import { IProduct } from '@/types';
 import { formatPrice, getWhatsAppLink } from '@/lib/utils';
 import { useBuyerAuth } from '@/context/BuyerAuthContext';
