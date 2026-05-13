@@ -164,10 +164,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
               </div>
             )}
             {product.video && (
-              <div className="mt-4 rounded-xl overflow-hidden">
-                <video controls className="w-full rounded-xl" poster={product.images?.[0]}>
-                  <source src={product.video} />
-                </video>
+              <div className="mt-4">
+                <ProductVideoPlayer src={product.video} poster={product.images?.[0]} />
               </div>
             )}
           </div>

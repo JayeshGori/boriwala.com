@@ -16,8 +16,13 @@ export async function POST(req: NextRequest) {
     const urls: string[] = [];
 
     for (const file of files) {
-      if (file.size > 2 * 1024 * 1024) {
-        return NextResponse.json({ success: false, error: 'File size must be under 2MB' }, { status: 400 });
+      const isVideo = (file.type || '').startsWith('video/');
+      const maxSize = isVideo ? 20 * 1024 * 1024 : 2 * 1024 * 1024; // 20MB videos, 2MB images
+      if (file.size > maxSize) {
+        return NextResponse.json(
+          { success: false, error: isVideo ? 'Video must be under 20MB. For longer videos, host on YouTube/Drive and paste the URL.' : 'Image must be under 2MB' },
+          { status: 400 }
+        );
       }
 
       const bytes = await file.arrayBuffer();

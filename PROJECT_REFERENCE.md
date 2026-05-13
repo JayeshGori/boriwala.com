@@ -50,12 +50,12 @@
 ```env
 MONGODB_URI=mongodb+srv://...           # MongoDB Atlas connection string
 NEXTAUTH_SECRET=your-secret-key         # JWT signing secret
-NEXTAUTH_URL=https://boriwala.vercel.app
+NEXTAUTH_URL=https://boriwala.com
 ADMIN_EMAIL=admin@boriwala.com          # Seed admin email
 ADMIN_PASSWORD=admin123                 # Seed admin password
 WHATSAPP_NUMBER=919999999999            # Server-side WhatsApp number
 NEXT_PUBLIC_WHATSAPP_NUMBER=919999999999 # Client-side WhatsApp number
-NEXT_PUBLIC_SITE_URL=https://boriwala.vercel.app
+NEXT_PUBLIC_SITE_URL=https://boriwala.com
 ```
 
 ---
@@ -425,7 +425,7 @@ Products API supports filtering via `fa_*` query params (e.g. `?fa_quality=gold&
 - **Expo SDK 55** + React Native 0.83
 - Uses **WebView** to render website pages inside native tabs
 - Bottom tab navigation: Home, Products, Categories, Contact, Account
-- Each tab loads the corresponding website URL: `https://boriwala.vercel.app/{path}`
+- Each tab loads the corresponding website URL: `https://boriwala.com/{path}`
 - JavaScript injected into WebView to hide website header/footer (since app provides its own nav)
 
 ### Push Notifications
@@ -441,7 +441,7 @@ Products API supports filtering via `fa_*` query params (e.g. `?fa_quality=gold&
 - Built APK at: `C:\Users\marke\boriwala-app.apk`
 
 ### Key Config (`src/config.ts`)
-- `BASE_URL`: `https://boriwala.vercel.app`
+- `BASE_URL`: `https://boriwala.com`
 - Primary color: `#f59e0b` (amber-500)
 
 ---

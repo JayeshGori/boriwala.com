@@ -2,17 +2,18 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { FiMenu, FiX, FiPhone, FiMail, FiUser, FiLogIn, FiLogOut, FiChevronDown } from 'react-icons/fi';
+import { FiMenu, FiX, FiPhone, FiMail, FiLogIn, FiLogOut, FiChevronDown } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import { useBuyerAuth } from '@/context/BuyerAuthContext';
 import Logo from './Logo';
 import PriceTicker from './PriceTicker';
+import { DesktopMegaMenu, MobileCategoryAccordion } from './MegaMenu';
 import { WHATSAPP_NUMBER, PHONE_NUMBER, PHONE_DISPLAY } from '@/lib/contact';
 
+// Desktop primary nav links (Categories handled separately by mega menu)
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/products', label: 'Products' },
-  { href: '/categories', label: 'Categories' },
   { href: '/tools/bag-weight-calculator', label: 'Bag Calculator' },
   { href: '/about', label: 'About Us' },
   { href: '/contact', label: 'Contact' },
@@ -66,13 +67,6 @@ export default function Header() {
               <FaWhatsapp size={14} />
               <span className="hidden sm:inline">WhatsApp Us</span>
             </a>
-            {!loading && !buyer && (
-              <div className="hidden sm:flex items-center gap-2 ml-2 border-l border-slate-600 pl-4">
-                <Link href="/login" className="hover:text-amber-400 transition-colors text-xs">Login</Link>
-                <span className="text-slate-500">|</span>
-                <Link href="/signup" className="hover:text-amber-400 transition-colors text-xs">Register</Link>
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -86,7 +80,24 @@ export default function Header() {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
+            {/* Home */}
+            <Link
+              href="/"
+              className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all"
+            >
+              Home
+            </Link>
+            {/* Products */}
+            <Link
+              href="/products"
+              className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-all"
+            >
+              Products
+            </Link>
+            {/* Mega menu */}
+            <DesktopMegaMenu />
+            {/* Remaining links */}
+            {navLinks.slice(2).map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -163,7 +174,7 @@ export default function Header() {
 
         {/* Mobile nav */}
         {isOpen && (
-          <div className="md:hidden pb-4 border-t border-slate-100">
+          <div className="md:hidden pb-4 border-t border-slate-100 max-h-[calc(100vh-120px)] overflow-y-auto">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -174,6 +185,9 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+
+            {/* Mobile category accordion */}
+            <MobileCategoryAccordion onNavigate={() => setIsOpen(false)} />
 
             {!loading && buyer ? (
               <div className="mx-4 mt-2 p-3 bg-slate-50 rounded-lg border border-slate-200">
@@ -200,7 +214,7 @@ export default function Header() {
                   onClick={() => setIsOpen(false)}
                   className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2 border border-slate-300 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors"
                 >
-                  <FiUser size={14} /> Login
+                  <FiLogIn size={14} /> Login
                 </Link>
                 <Link
                   href="/signup"

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const contactInfo = [
   { icon: FiPhone, label: 'Phone', values: [PHONE_DISPLAY], type: 'tel' },
   { icon: FiMail, label: 'Email', values: ['info@boriwala.com', 'sales@boriwala.com'], type: 'email' },
-  { icon: FiMapPin, label: 'Address', values: ['123, Industrial Area, Dharavi', 'Mumbai - 400017, Maharashtra, India'], type: 'text' },
+  { icon: FiMapPin, label: 'Address', values: ['A-214, Bedi Mandi, Rajkot Morbi Highway', 'Rajkot - 360003, Gujarat, India'], type: 'text' },
   { icon: FiClock, label: 'Business Hours', values: ['Mon - Sat: 9:00 AM - 7:00 PM', 'Sunday: Closed'], type: 'text' },
 ];
 
@@ -81,14 +81,14 @@ export default function ContactPage() {
         {/* Google Map */}
         <div className="mt-12 rounded-2xl overflow-hidden border border-slate-200">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.5!2d72.85!3d19.04!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDAyJzI0LjAiTiA3MsKwNTEnMDAuMCJF!5e0!3m2!1sen!2sin!4v1234567890"
+            src="https://www.google.com/maps?q=A-214,+Bedi+Mandi,+Rajkot+Morbi+Highway,+Rajkot+360003&output=embed"
             width="100%"
             height="400"
             style={{ border: 0 }}
             allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            title="Boriwala Trading Co. Location"
+            title="Boriwala Trading Co. - Rajkot Location"
           />
         </div>
       </div>

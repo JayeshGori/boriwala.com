@@ -22,6 +22,7 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://boriwala.com"),
   title: {
     default: "Boriwala Trading Co. | B2B Trading & Industrial Packaging",
     template: "%s | Boriwala Trading Co.",

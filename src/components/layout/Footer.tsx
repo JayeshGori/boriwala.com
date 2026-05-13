@@ -93,7 +93,7 @@ export default function Footer() {
               </a>
               <div className="flex items-start gap-2 text-sm text-slate-400">
                 <FiMapPin size={16} className="mt-0.5 shrink-0" />
-                Mumbai, Maharashtra, India
+                <span>A-214, Bedi Mandi, Rajkot Morbi Highway,<br />Rajkot - 360003, Gujarat, India</span>
               </div>
               <a
                 href={`https://wa.me/${WHATSAPP_NUMBER}`}

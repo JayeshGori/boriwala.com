@@ -11,7 +11,7 @@ async function getOrCreateSettings() {
       tagline: 'Your Trusted B2B Trading Partner',
       phone: ['+91 74053 37635'],
       email: ['info@boriwala.com'],
-      address: 'Mumbai, Maharashtra, India',
+      address: 'A-214, Bedi Mandi, Rajkot Morbi Highway, Rajkot - 360003, Gujarat, India',
       whatsappNumber: '917405337635',
       aboutUs: 'We are a leading B2B trading company specializing in PP Bags, Jute Bags, Plastic Products, Industrial Packaging Materials and more. With over 15 years of experience, we serve businesses across India with quality products and competitive pricing.',
       aboutUsShort: 'Leading B2B trading company dealing in PP Bags, Jute Bags, Plastic Products & Industrial Packaging Materials.',
