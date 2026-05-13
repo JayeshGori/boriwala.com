@@ -130,9 +130,23 @@ export default function Header() {
                         <span className="inline-block mt-1 px-2 py-0.5 bg-amber-50 text-amber-700 text-xs font-medium rounded-full">Pending Approval</span>
                       )}
                     </div>
+                    <Link
+                      href="/profile"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                    >
+                      My Profile
+                    </Link>
+                    <Link
+                      href="/profile?tab=enquiries"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+                    >
+                      My Enquiries
+                    </Link>
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
+                      className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors border-t border-slate-100"
                     >
                       <FiLogOut size={14} /> Logout
                     </button>
@@ -200,6 +214,13 @@ export default function Header() {
                     <p className="text-xs text-slate-500">{isApproved ? 'Approved' : 'Pending Approval'}</p>
                   </div>
                 </div>
+                <Link
+                  href="/profile"
+                  onClick={() => setIsOpen(false)}
+                  className="block w-full text-center px-4 py-2 text-sm text-slate-700 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors mb-2"
+                >
+                  My Profile
+                </Link>
                 <button
                   onClick={() => { handleLogout(); setIsOpen(false); }}
                   className="w-full text-center px-4 py-2 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"

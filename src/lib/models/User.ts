@@ -6,6 +6,12 @@ export interface IUserDoc {
   password: string;
   phone?: string;
   companyName?: string;
+  gstNumber?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  state?: string;
+  pincode?: string;
   role: 'admin' | 'editor' | 'buyer';
   isActive: boolean;
   isApproved: boolean;
@@ -18,6 +24,12 @@ const UserSchema = new Schema<IUserDoc>(
     password: { type: String, required: true },
     phone: { type: String, default: '' },
     companyName: { type: String, default: '' },
+    gstNumber: { type: String, default: '' },
+    addressLine1: { type: String, default: '' },
+    addressLine2: { type: String, default: '' },
+    city: { type: String, default: '' },
+    state: { type: String, default: '' },
+    pincode: { type: String, default: '' },
     role: { type: String, enum: ['admin', 'editor', 'buyer'], default: 'buyer' },
     isActive: { type: Boolean, default: true },
     isApproved: { type: Boolean, default: false },

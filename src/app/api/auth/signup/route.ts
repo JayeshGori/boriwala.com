@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/lib/models/User';
 import { hashPassword } from '@/lib/auth';
+import { sendEmail, welcomeEmail } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,9 +24,11 @@ export async function POST(req: NextRequest) {
     }
 
     const hashed = await hashPassword(password);
+    const cleanEmail = email.toLowerCase().trim();
+    const cleanName = name.trim();
     await User.create({
-      name: name.trim(),
-      email: email.toLowerCase().trim(),
+      name: cleanName,
+      email: cleanEmail,
       password: hashed,
       phone: phone?.trim() || '',
       companyName: companyName?.trim() || '',
@@ -33,6 +36,12 @@ export async function POST(req: NextRequest) {
       isActive: true,
       isApproved: false,
     });
+
+    // Send welcome email (non-blocking — failure must not break signup)
+    const tpl = welcomeEmail(cleanName);
+    sendEmail({ to: cleanEmail, subject: tpl.subject, html: tpl.html }).catch((err) =>
+      console.error('[signup] welcome email failed:', err),
+    );
 
     return NextResponse.json({
       success: true,

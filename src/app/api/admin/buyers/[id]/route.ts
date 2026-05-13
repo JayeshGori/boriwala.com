@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/lib/models/User';
 import { authenticateRequest } from '@/lib/auth';
+import { sendEmail, approvalEmail } from '@/lib/email';
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -18,6 +19,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     if (typeof body.isApproved === 'boolean') updateData.isApproved = body.isApproved;
     if (typeof body.isActive === 'boolean') updateData.isActive = body.isActive;
 
+    const before = await User.findOne({ _id: id, role: 'buyer' }).select('isApproved name email').lean();
     const buyer = await User.findOneAndUpdate(
       { _id: id, role: 'buyer' },
       updateData,
@@ -26,6 +28,14 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
     if (!buyer) {
       return NextResponse.json({ success: false, error: 'Buyer not found' }, { status: 404 });
+    }
+
+    // Send approval email when buyer transitions from not-approved -> approved
+    if (before && !before.isApproved && updateData.isApproved === true) {
+      const tpl = approvalEmail(before.name);
+      sendEmail({ to: before.email, subject: tpl.subject, html: tpl.html }).catch((err) =>
+        console.error('[buyer-approve] email failed:', err),
+      );
     }
 
     return NextResponse.json({ success: true, data: buyer });

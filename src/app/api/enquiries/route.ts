@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Enquiry from '@/lib/models/Enquiry';
 import { authenticateRequest } from '@/lib/auth';
+import { sendEmail, enquiryReceivedEmail } from '@/lib/email';
 
 export async function GET(req: NextRequest) {
   try {
@@ -67,6 +68,15 @@ export async function POST(req: NextRequest) {
     }
 
     const enquiry = await Enquiry.create(body);
+
+    // Send confirmation email to buyer (non-blocking)
+    if (body.email) {
+      const tpl = enquiryReceivedEmail(body.name, body.productName);
+      sendEmail({ to: body.email, subject: tpl.subject, html: tpl.html, replyTo: 'info@boriwala.com' }).catch(
+        (err) => console.error('[enquiry] confirmation email failed:', err),
+      );
+    }
+
     return NextResponse.json({ success: true, data: enquiry, message: 'Enquiry submitted successfully' }, { status: 201 });
   } catch (error) {
     console.error('POST enquiry error:', error);

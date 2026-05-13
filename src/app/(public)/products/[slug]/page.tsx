@@ -11,6 +11,9 @@ import PriceDisplay from '@/components/products/PriceDisplay';
 import DispatchBadge from '@/components/products/DispatchBadge';
 import PurchaseFlow from '@/components/products/PurchaseFlow';
 import RelatedProductsSection from '@/components/products/RelatedProductsSection';
+import ReviewsSection from '@/components/products/ReviewsSection';
+import PriceAlertWidget from '@/components/products/PriceAlertWidget';
+import TransportEstimator from '@/components/products/TransportEstimator';
 import { IProduct } from '@/types';
 import { getWhatsAppLink } from '@/lib/utils';
 import { useBuyerAuth } from '@/context/BuyerAuthContext';
@@ -296,6 +299,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
             )}
           </div>
         </div>
+
+        {/* Transport estimator */}
+        <div className="mt-12">
+          <TransportEstimator fromPincode={product.stockPincode || '360003'} productWeightKg={parseFloat(product.weight || '100') || 100} />
+        </div>
+
+        {/* Reviews */}
+        <ReviewsSection productId={product._id} productName={product.name} />
 
         {/* Purchase flow */}
         <PurchaseFlow productName={product.name} />
