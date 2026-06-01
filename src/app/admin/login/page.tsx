@@ -74,10 +74,6 @@ export default function AdminLoginPage() {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
-
-        <p className="text-center text-xs text-slate-500 mt-6">
-          Default: admin@boriwala.com / admin123
-        </p>
       </div>
     </div>
   );
