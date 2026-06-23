@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Boriwala.com — Business Card</title>
+<style>
+  :root {
+    --orange: #f46f25;
+    --orange-light: #ff8c42;
+    --blue: #1a73e8;
+    --blue-light: #4285f4;
+    --ink: #1f2937;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Montserrat', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background: #e9edf2;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    padding: 48px 16px 80px;
+  }
+
+  .toolbar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .toolbar h1 { font-size: 18px; font-weight: 700; color: var(--blue); }
+  .toolbar p { font-size: 13px; color: #64748b; }
+  .btn {
+    background: var(--orange);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(244,111,37,.35);
+  }
+  .btn:hover { background: var(--orange-light); }
+
+  .cards {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .card-wrap { text-align: center; }
+  .card-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #94a3b8; margin-bottom: 10px; font-weight: 600; }
+
+  /* Standard business card: 3.5in x 2in. Screen scale ~ 96dpi*3.5 = 336 x 192, scaled up for clarity */
+  .card {
+    width: 525px;   /* 3.5in @150dpi */
+    height: 300px;  /* 2in   @150dpi */
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 18px 45px rgba(15,23,42,.22);
+  }
+
+  /* ---------- FRONT ---------- */
+  .front {
+    background:
+      radial-gradient(circle at 85% 15%, rgba(244,111,37,.10), transparent 45%),
+      radial-gradient(circle at 12% 88%, rgba(26,115,232,.10), transparent 45%),
+      #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+  }
+  .front::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 10px;
+    background: linear-gradient(90deg, var(--orange), var(--orange-light));
+  }
+  .front::after {
+    content: "";
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 10px;
+    background: linear-gradient(90deg, var(--blue), var(--blue-light));
+  }
+  .front .logo { width: 400px; height: auto; }
+
+  /* ---------- BACK ---------- */
+  .back {
+    background:
+      radial-gradient(circle at 88% 12%, rgba(255,140,66,.16), transparent 42%),
+      linear-gradient(135deg, #0f2747 0%, #16335c 55%, #1a3a66 100%);
+    color: #fff;
+    display: grid;
+    grid-template-columns: 70px 1fr;
+  }
+  /* Left vertical accent rail */
+  .back .rail {
+    background: linear-gradient(180deg, var(--orange), var(--orange-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .back .rail::after {
+    content: "";
+    position: absolute; top: 14px; bottom: 14px; right: 0;
+    width: 2px;
+    background: rgba(255,255,255,.25);
+  }
+
+  .back .content {
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Top: two contacts */
+  .back .contacts {
+    display: flex;
+    gap: 26px;
+    width: 100%;
+    justify-content: center;
+  }
+  .back .person { flex: 1; }
+  .back .person .pname {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    line-height: 1.1;
+  }
+  .back .person .pphone {
+    margin-top: 6px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--orange-light);
+  }
+  .back .contacts .sep { width: 1px; background: rgba(255,255,255,.18); flex: 0 0 1px; }
+
+  /* Bottom: address + website */
+  .back .footer { width: 100%; }
+  .back .footer .addr {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #b8c6da;
+  }
+  .back .footer .web {
+    margin-top: 10px;
+    font-size: 13px; font-weight: 700; letter-spacing: 1.5px;
+    color: var(--orange-light);
+  }
+
+  @media print {
+    @page { margin: 0; }
+    body { background: #fff; padding: 0; gap: 0; }
+    .toolbar, .card-label { display: none; }
+    .cards { gap: 0; }
+    .card-wrap { page-break-after: always; }
+    .card { box-shadow: none; border-radius: 0; }
+  }
+</style>
+</head>
+<body>
+  <div class="toolbar">
+    <h1>Boriwala.com — Business Card</h1>
+    <p>3.5" × 2" · print or save as PDF</p>
+    <button class="btn" onclick="window.print()">Print / Save PDF</button>
+  </div>
+
+  <div class="cards">
+    <!-- FRONT -->
+    <div class="card-wrap">
+      <div class="card-label">Front</div>
+      <div class="card front">
+        <img class="logo" src="/logo.svg" alt="Boriwala logo" />
+      </div>
+    </div>
+
+    <!-- BACK -->
+    <div class="card-wrap">
+      <div class="card-label">Back</div>
+      <div class="card back">
+        <div class="rail"></div>
+
+        <div class="content">
+          <div class="contacts">
+            <div class="person">
+              <div class="pname">Jayesh Gori</div>
+              <div class="pphone">+91 74053 37635</div>
+            </div>
+            <div class="sep"></div>
+            <div class="person">
+              <div class="pname">Jagdish Gori</div>
+              <div class="pphone">+91 99799 07408</div>
+            </div>
+          </div>
+
+          <div class="footer">
+            <div class="addr">A-214, BEDI APMC Marketing Yard,<br/>Rajkot - 360003, Gujarat</div>
+            <div class="web">www.boriwala.com</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<svg width="1050" height="600" viewBox="0 0 525 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="navy" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f2747"/>
+      <stop offset="55%" stop-color="#16335c"/>
+      <stop offset="100%" stop-color="#1a3a66"/>
+    </linearGradient>
+    <linearGradient id="rail" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f46f25"/>
+      <stop offset="100%" stop-color="#ff8c42"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="88%" cy="12%" r="42%">
+      <stop offset="0%" stop-color="#ff8c42" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#ff8c42" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="525" height="300" fill="url(#navy)"/>
+  <rect width="525" height="300" fill="url(#glow)"/>
+
+  <!-- Left orange rail -->
+  <rect x="0" y="0" width="70" height="300" fill="url(#rail)"/>
+  <line x1="70" y1="14" x2="70" y2="286" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+
+  <!-- Content area center: x from 70 to 525 => center = 297.5 -->
+  <g text-anchor="middle" font-family="Montserrat, 'Segoe UI', Arial, sans-serif">
+    <!-- Top: two contacts -->
+    <!-- Person 1 -->
+    <text x="205" y="78" font-size="19" font-weight="700" fill="#ffffff">Jayesh Gori</text>
+    <text x="205" y="100" font-size="13.5" font-weight="600" fill="#ff8c42">+91 74053 37635</text>
+    <!-- divider -->
+    <line x1="297.5" y1="58" x2="297.5" y2="104" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1"/>
+    <!-- Person 2 -->
+    <text x="390" y="78" font-size="19" font-weight="700" fill="#ffffff">Jagdish Gori</text>
+    <text x="390" y="100" font-size="13.5" font-weight="600" fill="#ff8c42">+91 99799 07408</text>
+
+    <!-- Bottom: address + website -->
+    <text x="297.5" y="238" font-size="13" fill="#b8c6da">A-214, BEDI APMC Marketing Yard,</text>
+    <text x="297.5" y="256" font-size="13" fill="#b8c6da">Rajkot - 360003, Gujarat</text>
+    <text x="297.5" y="282" font-size="13" font-weight="700" letter-spacing="1.5" fill="#ff8c42">www.boriwala.com</text>
+  </g>
+</svg>

@@ -1,0 +1,38 @@
+<svg width="1125" height="675" viewBox="0 0 562.5 337.5" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="navy" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f2747"/>
+      <stop offset="55%" stop-color="#16335c"/>
+      <stop offset="100%" stop-color="#1a3a66"/>
+    </linearGradient>
+    <linearGradient id="rail" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f46f25"/>
+      <stop offset="100%" stop-color="#ff8c42"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="88%" cy="12%" r="42%">
+      <stop offset="0%" stop-color="#ff8c42" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#ff8c42" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Full-bleed navy background -->
+  <rect width="562.5" height="337.5" fill="url(#navy)"/>
+  <rect width="562.5" height="337.5" fill="url(#glow)"/>
+
+  <!-- Orange rail bleeding off left/top/bottom (trim rail width 70 + 18.75 bleed) -->
+  <rect x="0" y="0" width="88.75" height="337.5" fill="url(#rail)"/>
+  <line x1="88.75" y1="32.75" x2="88.75" y2="304.75" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+
+  <!-- Trim-area content shifted by bleed offset (18.75) -->
+  <g transform="translate(18.75,18.75)" text-anchor="middle" font-family="Montserrat, 'Segoe UI', Arial, sans-serif">
+    <text x="205" y="78" font-size="19" font-weight="700" fill="#ffffff">Jayesh Gori</text>
+    <text x="205" y="100" font-size="13.5" font-weight="600" fill="#ff8c42">+91 74053 37635</text>
+    <line x1="297.5" y1="58" x2="297.5" y2="104" stroke="#ffffff" stroke-opacity="0.18" stroke-width="1"/>
+    <text x="390" y="78" font-size="19" font-weight="700" fill="#ffffff">Jagdish Gori</text>
+    <text x="390" y="100" font-size="13.5" font-weight="600" fill="#ff8c42">+91 99799 07408</text>
+
+    <text x="297.5" y="238" font-size="13" fill="#b8c6da">A-214, BEDI APMC Marketing Yard,</text>
+    <text x="297.5" y="256" font-size="13" fill="#b8c6da">Rajkot - 360003, Gujarat</text>
+    <text x="297.5" y="282" font-size="13" font-weight="700" letter-spacing="1.5" fill="#ff8c42">www.boriwala.com</text>
+  </g>
+</svg>

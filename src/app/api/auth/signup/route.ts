@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import User from '@/lib/models/User';
 import { hashPassword } from '@/lib/auth';
-import { sendEmail, welcomeEmail } from '@/lib/email';
+import { sendEmail, welcomeEmail, adminNewRegistrationEmail } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
   try {
@@ -37,11 +37,31 @@ export async function POST(req: NextRequest) {
       isApproved: false,
     });
 
-    // Send welcome email (non-blocking — failure must not break signup)
+    // Send welcome email to the new buyer (non-blocking — failure must not break signup)
     const tpl = welcomeEmail(cleanName);
     sendEmail({ to: cleanEmail, subject: tpl.subject, html: tpl.html }).catch((err) =>
       console.error('[signup] welcome email failed:', err),
     );
+
+    // Notify admin(s) of the new registration (non-blocking)
+    const adminRecipients = (process.env.ADMIN_NOTIFICATION_EMAIL || process.env.ADMIN_EMAIL || '')
+      .split(',')
+      .map((e) => e.trim())
+      .filter(Boolean);
+    if (adminRecipients.length) {
+      const adminTpl = adminNewRegistrationEmail({
+        name: cleanName,
+        email: cleanEmail,
+        phone: phone?.trim() || '',
+        companyName: companyName?.trim() || '',
+      });
+      sendEmail({
+        to: adminRecipients.join(','),
+        subject: adminTpl.subject,
+        html: adminTpl.html,
+        replyTo: cleanEmail,
+      }).catch((err) => console.error('[signup] admin notification failed:', err));
+    }
 
     return NextResponse.json({
       success: true,

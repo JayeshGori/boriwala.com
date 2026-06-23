@@ -1,0 +1,33 @@
+<svg width="1125" height="675" viewBox="0 0 562.5 337.5" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1a73e8"/>
+      <stop offset="100%" stop-color="#4285f4"/>
+    </linearGradient>
+    <linearGradient id="topBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f46f25"/>
+      <stop offset="100%" stop-color="#ff8c42"/>
+    </linearGradient>
+    <linearGradient id="bottomBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1a73e8"/>
+      <stop offset="100%" stop-color="#4285f4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Full-bleed background -->
+  <rect width="562.5" height="337.5" fill="#ffffff"/>
+
+  <!-- Accent bars bleeding off top & bottom edges -->
+  <rect x="0" y="0" width="562.5" height="26.75" fill="url(#topBar)"/>
+  <rect x="0" y="310.75" width="562.5" height="26.75" fill="url(#bottomBar)"/>
+
+  <!-- Trim-area content shifted by bleed offset (18.75) -->
+  <g transform="translate(18.75,18.75)" text-anchor="middle">
+    <text x="262.5" y="142" font-family="Montserrat, 'Segoe UI', Arial, sans-serif" font-size="40" font-weight="800" letter-spacing="2" fill="url(#textGradient)">BORIWALA<tspan fill="#f46f25">.COM</tspan></text>
+    <line x1="95" y1="162" x2="430" y2="162" stroke="#f46f25" stroke-width="3" stroke-linecap="round"/>
+    <text x="262.5" y="190" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="7" fill="#f46f25">BAGS THAT MATTER</text>
+  </g>
+
+  <!-- Trim guide (remove before final print) -->
+  <rect x="18.75" y="18.75" width="525" height="300" fill="none" stroke="#ff00ff" stroke-width="0.4" stroke-dasharray="4 4" opacity="0.0"/>
+</svg>

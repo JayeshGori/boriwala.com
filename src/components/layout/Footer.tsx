@@ -115,9 +115,14 @@ export default function Footer() {
           <p className="text-xs text-slate-500">
             &copy; {new Date().getFullYear()} Boriwala Trading Co. All rights reserved.
           </p>
-          <p className="text-xs text-slate-500">
-            B2B Trading &amp; Industrial Packaging Solutions
-          </p>
+          <div className="flex items-center gap-4 text-xs text-slate-500">
+            <Link href="/privacy-policy" className="hover:text-amber-400 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-amber-400 transition-colors">
+              Terms of Service
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

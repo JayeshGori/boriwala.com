@@ -1,0 +1,12 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="badge" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a73e8"/>
+      <stop offset="100%" stop-color="#4285f4"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="480" height="480" rx="116" fill="url(#badge)"/>
+  <rect x="16" y="16" width="480" height="240" rx="116" fill="#ffffff" fill-opacity="0.08"/>
+  <text x="226" y="372" text-anchor="middle" font-family="Montserrat, 'Segoe UI', Arial, sans-serif" font-size="340" font-weight="800" fill="#ffffff">B</text>
+  <circle cx="392" cy="356" r="34" fill="#f46f25"/>
+</svg>
