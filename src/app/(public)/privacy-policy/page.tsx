@@ -117,8 +117,9 @@ export default function PrivacyPolicyPage() {
           <Section title="8. Your Rights & Data / Account Deletion">
             <p>
               You may request access to, correction of, or deletion of your personal data, including full deletion
-              of your account and any associated enquiries and push tokens. To make a request, contact us using any
-              of the methods below and we will process it within 30 days:
+              of your account and any associated enquiries and push tokens. For step-by-step instructions, see our{' '}
+              <a className="text-amber-600 underline" href="/account-deletion">Account &amp; Data Deletion</a> page,
+              or contact us using any of the methods below. We process verified requests within 30 days:
             </p>
             <ul className="list-disc pl-6 space-y-2 mt-3">
               <li>

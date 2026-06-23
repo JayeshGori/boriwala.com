@@ -122,6 +122,9 @@ export default function Footer() {
             <Link href="/terms" className="hover:text-amber-400 transition-colors">
               Terms of Service
             </Link>
+            <Link href="/account-deletion" className="hover:text-amber-400 transition-colors">
+              Account Deletion
+            </Link>
           </div>
         </div>
       </div>
